@@ -1,0 +1,32 @@
+<html>
+<body>
+<h1 th:text="#{registration.title}">form</h1>
+<form th:action="@{/user/registration}" th:object="${user}" method="POST" enctype="utf8">
+    <div>
+        <label th:text="#{registration.username}">first</label>
+        <input th:field="*{username}"/>
+        <p th:each="error: ${#fields.errors('username')}"
+           th:text="${error}">Validation error</p>
+    </div>
+    <div>
+        <label th:text="#{registration.email}">email</label>
+        <input type="email" th:field="*{email}"/>
+        <p th:each="error : ${#fields.errors('email')}"
+           th:text="${error}">Validation error</p>
+    </div>
+    <div>
+        <label th:text="#{registration.password}">password</label>
+        <input type="password" th:field="*{password}"/>
+        <p th:each="error : ${#fields.errors('password')}"
+           th:text="${error}">Validation error</p>
+    </div>
+    <div>
+        <label th:text="#{registration.confirmPassword}">confirm</label>
+        <input type="password" th:field="*{matchingPassword}"/>
+    </div>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    <button type="submit" th:text="#{registration.submit}">submit</button>
+</form>
+
+</body>
+</html>
