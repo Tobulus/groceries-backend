@@ -1,7 +1,9 @@
 package grocery.service;
 
+import grocery.model.Authority;
 import grocery.model.User;
 import grocery.model.UserDto;
+import grocery.model.repository.AuthorityRepository;
 import grocery.model.repository.UserRepository;
 import grocery.model.validation.EmailExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,10 @@ import javax.transaction.Transactional;
 public class UserService implements IUserService {
 
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private AuthorityRepository authorityRepository;
 
     @Transactional
     @Override
@@ -31,12 +36,21 @@ public class UserService implements IUserService {
         user.setUsername(accountDto.getUsername());
         user.setPassword(crypt.encode(accountDto.getPassword()));
         user.setEmail(accountDto.getEmail());
+        user.setEnabled(true);
 
-        return repository.save(user);
+        user = userRepository.save(user);
+
+        Authority auth = new Authority();
+        auth.setAuthority("USER");
+        auth.setUsername(user.getUsername());
+
+        authorityRepository.save(auth);
+
+        return user;
     }
 
     private boolean emailExists(String email) {
-        User user = repository.findByEmail(email);
+        User user = userRepository.findByEmail(email);
         return user != null;
     }
 }
