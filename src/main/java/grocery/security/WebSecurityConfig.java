@@ -4,11 +4,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import javax.sql.DataSource;
 
@@ -40,15 +44,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
-        try {
-            auth.jdbcAuthentication()
-                    .passwordEncoder(new BCryptPasswordEncoder())
-                    .dataSource(dataSource())
-                    .usersByUsernameQuery("select username,password,enabled from users where username=?")
-                    .authoritiesByUsernameQuery("select username,authority from authorities where username = ?");
-        } catch (Exception e) {
-            // TODO
-        }
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsManager()).passwordEncoder(bcrypt());
+    }
+
+    @Bean
+    public BCryptPasswordEncoder bcrypt(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JdbcUserDetailsManager userDetailsManager()  {
+        JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource());
+        manager.setUsersByUsernameQuery("select username,password,enabled from users where username=?");
+        manager.setAuthoritiesByUsernameQuery("select username,authority from authorities where username = ?");
+        return manager;
     }
 }

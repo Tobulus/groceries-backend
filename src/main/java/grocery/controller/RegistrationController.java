@@ -1,10 +1,10 @@
 package grocery.controller;
 
-import grocery.model.User;
 import grocery.model.UserDto;
 import grocery.model.validation.EmailExistsException;
 import grocery.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -37,22 +37,16 @@ public class RegistrationController {
             BindingResult result,
             WebRequest request,
             Errors errors) {
-
-        User registered = new User();
-
-        if (!result.hasErrors()) {
-            registered = createUserAccount(accountDto, result);
+        if (result.hasErrors()) {
+            return new ModelAndView("registration", "user", accountDto);
         }
 
-        if (registered == null) {
+        if (createUserAccount(accountDto, result) == null) {
             result.rejectValue("email", "message.regError");
         }
 
-        if (result.hasErrors()) {
-            return new ModelAndView("registration", "user", accountDto);
-        } else {
-            return new ModelAndView("successRegister", "user", accountDto);
-        }
+        return new ModelAndView("successRegister", "user", accountDto);
+
     }
 
     private User createUserAccount(UserDto accountDto, BindingResult result) {

@@ -9,12 +9,6 @@
            th:text="${error}">Validation error</p>
     </div>
     <div>
-        <label th:text="#{registration.email}">email</label>
-        <input type="email" th:field="*{email}"/>
-        <p th:each="error : ${#fields.errors('email')}"
-           th:text="${error}">Validation error</p>
-    </div>
-    <div>
         <label th:text="#{registration.password}">password</label>
         <input type="password" th:field="*{password}"/>
         <p th:each="error : ${#fields.errors('password')}"

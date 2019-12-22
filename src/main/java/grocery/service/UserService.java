@@ -1,56 +1,42 @@
 package grocery.service;
 
-import grocery.model.Authority;
-import grocery.model.User;
 import grocery.model.UserDto;
 import grocery.model.repository.AuthorityRepository;
 import grocery.model.repository.UserRepository;
 import grocery.model.validation.EmailExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 
 @Service
 public class UserService implements IUserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private JdbcUserDetailsManager userDetailsManager;
 
     @Autowired
-    private AuthorityRepository authorityRepository;
+    private BCryptPasswordEncoder crypt;
 
     @Transactional
     @Override
-    public User registerNewUserAccount(UserDto accountDto)
+    public User registerNewUserAccount(UserDto userDto)
             throws EmailExistsException {
 
-        if (emailExists(accountDto.getEmail())) {
-            throw new EmailExistsException("There is an account with that email address:" + accountDto.getEmail());
+        if (userDetailsManager.userExists(userDto.getUsername())) {
+            throw new EmailExistsException("There is an account with that email address:" + userDto.getUsername());
         }
-
-        BCryptPasswordEncoder crypt = new BCryptPasswordEncoder();
-        User user = new User();
-
-        user.setUsername(accountDto.getUsername());
-        user.setPassword(crypt.encode(accountDto.getPassword()));
-        user.setEmail(accountDto.getEmail());
-        user.setEnabled(true);
-
-        user = userRepository.save(user);
-
-        Authority auth = new Authority();
-        auth.setAuthority("USER");
-        auth.setUsername(user.getUsername());
-
-        authorityRepository.save(auth);
+        User user = new User(userDto.getUsername(), crypt.encode(userDto.getPassword()), Collections.singletonList(new SimpleGrantedAuthority("USER")));
+        userDetailsManager.createUser(user);
 
         return user;
-    }
-
-    private boolean emailExists(String email) {
-        User user = userRepository.findByEmail(email);
-        return user != null;
     }
 }
