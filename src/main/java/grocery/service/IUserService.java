@@ -5,6 +5,6 @@ import grocery.model.validation.EmailExistsException;
 import org.springframework.security.core.userdetails.User;
 
 public interface IUserService {
-    User registerNewUserAccount(UserDto accountDto)
+    User createUser(UserDto accountDto)
             throws EmailExistsException;
 }

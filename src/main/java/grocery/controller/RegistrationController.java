@@ -51,7 +51,7 @@ public class RegistrationController {
 
     private User createUserAccount(UserDto accountDto, BindingResult result) {
         try {
-            return service.registerNewUserAccount(accountDto);
+            return service.createUser(accountDto);
         } catch (EmailExistsException e) {
             return null;
         }

@@ -1,13 +1,8 @@
 package grocery.service;
 
 import grocery.model.UserDto;
-import grocery.model.repository.AuthorityRepository;
-import grocery.model.repository.UserRepository;
 import grocery.model.validation.EmailExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,7 +23,7 @@ public class UserService implements IUserService {
 
     @Transactional
     @Override
-    public User registerNewUserAccount(UserDto userDto)
+    public User createUser(UserDto userDto)
             throws EmailExistsException {
 
         if (userDetailsManager.userExists(userDto.getUsername())) {
