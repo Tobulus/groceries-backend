@@ -16,7 +16,9 @@
 <body>
 <div class="container">
     <h1 th:text="#{grocery-list.title}">form</h1>
-    <form enctype="utf8" method="POST" th:action="@{/grocery-list/new}" th:object="${groceryList}">
+    <form enctype="utf8" method="POST"
+          th:action="@{/grocery-list/} + ${groceryList.getId() == null ? 'new' : groceryList.getId()}"
+          th:object="${groceryList}">
         <div class="form-group">
             <label for="name" th:text="#{grocery-list.name}">first</label>
             <input class="form-control" id="name" th:field="*{name}"/>

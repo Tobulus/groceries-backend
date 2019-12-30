@@ -14,13 +14,12 @@
             display: inline-block;
             margin-left: 10px;
        }
-
     </style>
 </head>
 <body>
 <div class="container">
     <h1 th:text="#{grocery-lists.title}">form</h1>
-    <div class="card-deck">
+    <div class="card-columns">
         <div class="card" style="width: 18rem;" th:each="list : ${groceryLists}">
             <div class="card-body">
                 <span class="fas fa-list"></span><h5 class="card-title heading" th:text="${list.name}"></h5>

@@ -43,7 +43,8 @@ public class GroceryController {
     }
 
     @PostMapping(value = "/grocery-list/{id}")
-    public void editGroceryList(@PathVariable Long id, @RequestParam String name) {
+    public void editGroceryList(@PathVariable Long id, @RequestParam String name,
+                                HttpServletResponse response) throws IOException {
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
         GroceryList groceryList = groceryListRepository.findByIdAndUser(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
@@ -51,6 +52,8 @@ public class GroceryController {
         groceryList.setName(name);
 
         groceryListRepository.save(groceryList);
+
+        response.sendRedirect("/grocery-lists");
     }
 
     @GetMapping(value = "/grocery-list/new")
