@@ -1,10 +1,10 @@
 package grocery.controller;
 
-import grocery.UserPrincipal;
 import grocery.model.GroceryList;
 import grocery.model.User;
 import grocery.model.repository.GroceryListRepository;
 import grocery.model.repository.UserRepository;
+import grocery.service.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;

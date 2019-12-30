@@ -1,4 +1,4 @@
-package grocery.security;
+package grocery.config;
 
 import grocery.service.UserDetailsManager;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -34,8 +34,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login")
-                .successForwardUrl("/grocery-lists")
+                .loginPage("/log-in")
+                .loginProcessingUrl("/login")
+                //.successForwardUrl("/grocery-lists")
                 .permitAll()
                 .and()
                 .logout()
@@ -48,12 +49,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public BCryptPasswordEncoder bcrypt(){
+    public BCryptPasswordEncoder bcrypt() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public JdbcUserDetailsManager userDetailsManager()  {
+    public JdbcUserDetailsManager userDetailsManager() {
         JdbcUserDetailsManager manager = new UserDetailsManager(dataSource());
         manager.setUsersByUsernameQuery("select username,password,enabled from users where username=?");
         manager.setAuthoritiesByUsernameQuery("select username,authority from authorities where username = ?");

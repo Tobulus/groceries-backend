@@ -1,6 +1,5 @@
 package grocery.service;
 
-import grocery.UserPrincipal;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;

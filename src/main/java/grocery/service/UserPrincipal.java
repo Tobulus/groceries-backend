@@ -1,4 +1,4 @@
-package grocery;
+package grocery.service;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
