@@ -1,0 +1,36 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <link href="/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/css/all.min.css" rel="stylesheet" type="text/css">
+    <style>
+        .container {
+            width: 50%;
+            margin: 0 auto;
+            margin-top: 10%;
+       }
+       .heading {
+            display: inline-block;
+            margin-left: 10px;
+       }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 th:text="#{grocery-lists.title}">form</h1>
+    <div class="card-deck">
+        <div class="card" style="width: 18rem;" th:each="list : ${groceryLists}">
+            <div class="card-body">
+                <span class="fas fa-list"></span><h5 class="card-title heading" th:text="${list.name}"></h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's content.</p>
+                <a class="btn btn-primary" th:href="@{'/grocery-list/' + ${list.getId()}}"
+                   th:text="#{grocery-lists.showList}"></a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

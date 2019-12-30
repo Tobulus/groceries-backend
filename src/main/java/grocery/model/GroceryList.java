@@ -1,5 +1,7 @@
 package grocery.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -18,8 +20,10 @@ public class GroceryList {
     @OneToMany(mappedBy = "groceryList", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GroceryListEntry> groceryListEntries;
 
-    @OneToMany
-    private List<User> users;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private User user;
 
     public Long getId() {
         return id;
@@ -39,5 +43,13 @@ public class GroceryList {
 
     public void setGroceryListEntries(List<GroceryListEntry> groceryListEntries) {
         this.groceryListEntries = groceryListEntries;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
