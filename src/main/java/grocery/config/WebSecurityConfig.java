@@ -1,5 +1,6 @@
-package grocery.security;
+package grocery.config;
 
+import grocery.service.UserDetailsManager;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -29,8 +30,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/resources/**", "/user/registration/**").permitAll()
-                //.anyRequest().authenticated()
+                .antMatchers("/css/**", "/user/registration", "/webfonts/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -46,13 +47,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public BCryptPasswordEncoder bcrypt(){
+    public BCryptPasswordEncoder bcrypt() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public JdbcUserDetailsManager userDetailsManager()  {
-        JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource());
+    public JdbcUserDetailsManager userDetailsManager() {
+        JdbcUserDetailsManager manager = new UserDetailsManager(dataSource());
         manager.setUsersByUsernameQuery("select username,password,enabled from users where username=?");
         manager.setAuthoritiesByUsernameQuery("select username,authority from authorities where username = ?");
         return manager;

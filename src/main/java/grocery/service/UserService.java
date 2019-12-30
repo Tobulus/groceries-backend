@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 import java.util.Collections;
 
 @Service
-public class UserService implements IUserService {
+public class UserService {
 
     @Autowired
     private JdbcUserDetailsManager userDetailsManager;
@@ -22,7 +22,6 @@ public class UserService implements IUserService {
     private BCryptPasswordEncoder crypt;
 
     @Transactional
-    @Override
     public User createUser(UserDto userDto)
             throws EmailExistsException {
 
