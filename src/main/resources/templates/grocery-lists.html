@@ -2,6 +2,8 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta th:content="${_csrf.token}" th:name="_csrf"/>
+    <meta th:content="${_csrf.headerName}" th:name="_csrf_header"/>
     <link href="/css/bootstrap.css" rel="stylesheet" type="text/css">
     <link href="/css/all.min.css" rel="stylesheet" type="text/css">
     <style>
@@ -14,7 +16,25 @@
             display: inline-block;
             margin-left: 10px;
        }
+
     </style>
+    <script>
+        var csrfToken = document.getElementsByName('_csrf')[0].content;
+        var csrfHeaderName = document.getElementsByName('_csrf_header')[0].content;
+
+        function deleteList (id) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('DELETE', "/grocery-list/" + id + "/delete", true);
+            xhr.setRequestHeader(csrfHeaderName, csrfToken);
+            xhr.onreadystatechange = function() {
+                if (this.status == 200 && this.readyState == 4) {
+                    window.location.replace("/grocery-lists");
+                }
+              };
+            xhr.send();
+        }
+
+    </script>
 </head>
 <body>
 <div class="container">
@@ -27,6 +47,8 @@
                     card's content.</p>
                 <a class="btn btn-primary" th:href="@{'/grocery-list/' + ${list.getId()}}"
                    th:text="#{grocery-lists.showList}"></a>
+                <a class="btn btn-danger" id="deleteButton" th:onclick="|deleteList(${list.getId()})|"
+                   th:text="#{grocery-lists.deleteList}"></a>
             </div>
         </div>
     </div>
