@@ -19,7 +19,7 @@ import java.security.InvalidParameterException;
 import java.security.Principal;
 
 @Controller
-public class GroceryController {
+public class GroceryListController {
 
     @Autowired
     private GroceryListRepository groceryListRepository;

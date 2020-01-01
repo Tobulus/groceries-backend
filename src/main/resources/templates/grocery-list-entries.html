@@ -1,0 +1,21 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <link href="/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <style>
+        .container {
+            width: 25%;
+            margin: 0 auto;
+            margin-top: 10%;
+       }
+
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div th:each="entry : ${groceryListEntries}" th:text="${entry.getName()}"></div>
+</div>
+</body>
+</html>

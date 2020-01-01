@@ -9,22 +9,22 @@
             margin: 0 auto;
             margin-top: 10%;
        }
+
     </style>
 </head>
-
 <body>
 <div class="container">
-    <h1 th:text="#{grocery-list.title}">form</h1>
+    <h1 th:text="#{grocery-list-entry.title}"></h1>
     <form enctype="utf8" method="POST"
-          th:action="@{/grocery-list/} + ${groceryList.getId() == null ? 'new' : groceryList.getId()}"
-          th:object="${groceryList}">
+          th:action="@{/grocery-list/} + ${ groceryList.getId() } + @{/entry/}  + ${groceryListEntry.getId() == null ? 'new' : groceryListEntry.getId()}"
+          th:object="${groceryListEntry}">
         <div class="form-group">
-            <label for="name" th:text="#{grocery-list.name}">first</label>
+            <label for="name" th:text="#{grocery-list-entry.name}"></label>
             <input class="form-control" id="name" th:field="*{name}"/>
             <p th:each="error: ${#fields.errors('name')}"
                th:text="${error}">Validation error</p>
         </div>
-        <button class="btn btn-primary" th:text="#{grocery-list.submit}" type="submit">submit</button>
+        <button class="btn btn-primary" th:text="#{grocery-list-entry.submit}" type="submit"></button>
     </form>
 </div>
 </body>

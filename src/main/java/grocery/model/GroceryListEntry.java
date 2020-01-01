@@ -20,8 +20,6 @@ public class GroceryListEntry {
 
     private Double quantity;
 
-    // TODO quantity unit
-
     public Long getId() {
         return id;
     }
@@ -32,5 +30,13 @@ public class GroceryListEntry {
 
     public void setGroceryList(GroceryList groceryList) {
         this.groceryList = groceryList;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
