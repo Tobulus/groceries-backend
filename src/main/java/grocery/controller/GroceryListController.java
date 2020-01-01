@@ -10,13 +10,12 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.InvalidParameterException;
-import java.security.Principal;
 
 @Controller
 public class GroceryListController {
@@ -28,18 +27,22 @@ public class GroceryListController {
     private UserRepository userRepository;
 
     @GetMapping(value = "/grocery-lists")
-    public ModelAndView groceryLists(Principal principal) {
+    public String groceryLists(Model model) {
         UserPrincipal currentUser = getUserPrincipalOrThrow();
-        return new ModelAndView("grocery-lists", "groceryLists",
-                                groceryListRepository.findByUser(userRepository.getOne(currentUser.getUserId())));
+        model.addAttribute("groceryLists",
+                           groceryListRepository.findByUser(userRepository.getOne(currentUser.getUserId())));
+
+        return "/grocery-list/grocery-lists";
     }
 
     @GetMapping(value = "/grocery-list/{id}")
-    public ModelAndView editGroceryList(@PathVariable Long id) {
+    public String editGroceryList(@PathVariable Long id, Model model) {
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
         GroceryList groceryList = groceryListRepository.findByIdAndUser(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
-        return new ModelAndView("grocery-list", "groceryList", groceryList);
+        model.addAttribute("groceryList", groceryList);
+
+        return "/grocery-list/grocery-list";
     }
 
     @PostMapping(value = "/grocery-list/{id}")
@@ -57,8 +60,9 @@ public class GroceryListController {
     }
 
     @GetMapping(value = "/grocery-list/new")
-    public ModelAndView newGroceryList() {
-        return new ModelAndView("grocery-list", "groceryList", new GroceryList());
+    public String newGroceryList(Model model) {
+        model.addAttribute("groceryList", new GroceryList());
+        return "/grocery-list/grocery-list";
     }
 
     @PostMapping(value = "/grocery-list/new")

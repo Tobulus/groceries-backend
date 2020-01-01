@@ -43,7 +43,7 @@ public class GroceryListEntryController {
 
         model.addAttribute("groceryListEntries", entries);
 
-        return "grocery-list-entries";
+        return "/grocery-list-entry/grocery-list-entries";
     }
 
     @GetMapping(value = "/grocery-list/{id}/entry/new")
@@ -55,7 +55,7 @@ public class GroceryListEntryController {
         model.addAttribute("groceryList", groceryList);
         model.addAttribute("groceryListEntry", new GroceryListEntry());
 
-        return "grocery-list-entry";
+        return "/grocery-list-entry/grocery-list-entry";
     }
 
     @GetMapping(value = "/grocery-list/{listId}/entry/{entryId}")
@@ -65,7 +65,7 @@ public class GroceryListEntryController {
         model.addAttribute("groceryList", groceryListEntry.getGroceryList());
         model.addAttribute("groceryListEntry", groceryListEntry);
 
-        return "grocery-list-entry";
+        return "/grocery-list-entry/grocery-list-entry";
     }
 
     @PostMapping(value = "/grocery-list/{id}/entry/new")
