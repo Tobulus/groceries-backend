@@ -1,12 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>test</title>
+    <title>index</title>
 </head>
 <body>
 <div sec:authorize="isAuthenticated()">
     Logged user: <span sec:authentication="name">Bob</span>
+    <form method="POST" th:action="@{/logout}">
+        <input type="submit" value="Log out"/>
+    </form>
 </div>
 </body>
 </html>
