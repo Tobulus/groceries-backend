@@ -22,7 +22,7 @@ public class RegistrationController {
     private UserService service;
 
     @RequestMapping(value = "/user/registration", method = RequestMethod.GET)
-    public String showRegistrationForm(Model model) {
+    public String showRegistration(Model model) {
         UserDto userDto = new UserDto();
         model.addAttribute("user", userDto);
         return "registration";

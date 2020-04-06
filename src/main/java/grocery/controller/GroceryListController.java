@@ -30,7 +30,7 @@ public class GroceryListController {
     public String groceryLists(Model model) {
         UserPrincipal currentUser = getUserPrincipalOrThrow();
         model.addAttribute("groceryLists",
-                           groceryListRepository.findByUser(userRepository.getOne(currentUser.getUserId())));
+                           groceryListRepository.findByUsers(userRepository.getOne(currentUser.getUserId())));
 
         return "/grocery-list/grocery-lists";
     }
@@ -38,7 +38,7 @@ public class GroceryListController {
     @GetMapping(value = "/grocery-list/{id}")
     public String editGroceryList(@PathVariable Long id, Model model) {
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
-        GroceryList groceryList = groceryListRepository.findByIdAndUser(id, currentUser).orElseThrow(
+        GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
         model.addAttribute("groceryList", groceryList);
 
@@ -49,7 +49,7 @@ public class GroceryListController {
     public void editGroceryList(@PathVariable Long id, @RequestParam String name,
                                 HttpServletResponse response) throws IOException {
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
-        GroceryList groceryList = groceryListRepository.findByIdAndUser(id, currentUser).orElseThrow(
+        GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
 
         groceryList.setName(name);
@@ -71,7 +71,7 @@ public class GroceryListController {
 
         GroceryList groceryList = new GroceryList();
         groceryList.setName(name);
-        groceryList.setUser(userRepository.getOne(currentUser.getUserId()));
+        groceryList.getUsers().add(userRepository.getOne(currentUser.getUserId()));
 
         groceryListRepository.save(groceryList);
 
@@ -81,7 +81,7 @@ public class GroceryListController {
     @DeleteMapping(value = "/grocery-list/{id}/delete")
     public void deleteGroceryList(@PathVariable Long id, HttpServletResponse response) throws IOException {
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
-        GroceryList groceryList = groceryListRepository.findByIdAndUser(id, currentUser).orElseThrow(
+        GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
 
         groceryListRepository.delete(groceryList);

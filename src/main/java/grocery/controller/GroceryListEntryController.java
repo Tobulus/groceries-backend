@@ -37,7 +37,7 @@ public class GroceryListEntryController {
     @GetMapping(value = "/grocery-list/{id}/entries")
     public String listGroceryListEntries(@PathVariable Long id, Model model) {
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
-        GroceryList groceryList = groceryListRepository.findByIdAndUser(id, currentUser).orElseThrow(
+        GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
         List<GroceryListEntry> entries = groceryListEntryRepository.findByGroceryList(groceryList);
 
@@ -49,7 +49,7 @@ public class GroceryListEntryController {
     @GetMapping(value = "/grocery-list/{id}/entry/new")
     public String newGroceryListEntry(@PathVariable Long id, Model model) {
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
-        GroceryList groceryList = groceryListRepository.findByIdAndUser(id, currentUser).orElseThrow(
+        GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
 
         model.addAttribute("groceryList", groceryList);
@@ -100,7 +100,7 @@ public class GroceryListEntryController {
 
     private GroceryListEntry fetchGroceryListEntry(Long groceryListId, Long entryId) {
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
-        GroceryList groceryList = groceryListRepository.findByIdAndUser(groceryListId, currentUser).orElseThrow(
+        GroceryList groceryList = groceryListRepository.findByIdAndUsers(groceryListId, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
         return groceryListEntryRepository.findByGroceryListAndId(groceryList, entryId);
     }
