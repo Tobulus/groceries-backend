@@ -1,5 +1,7 @@
 package grocery.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,6 +13,7 @@ public class GroceryListEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "grocerylist_id")
     private GroceryList groceryList;

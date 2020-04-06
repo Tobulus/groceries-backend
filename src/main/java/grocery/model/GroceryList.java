@@ -1,5 +1,8 @@
 package grocery.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
@@ -19,9 +22,11 @@ public class GroceryList {
     @Column(unique = false, nullable = false)
     private String name;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "groceryList", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GroceryListEntry> groceryListEntries;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "users_grocerylists",
             joinColumns = {@JoinColumn(name = "grocerylists_id")},

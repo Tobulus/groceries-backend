@@ -1,5 +1,7 @@
 package grocery.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,12 +18,14 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
     private boolean enabled;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "users",
             fetch = FetchType.LAZY,
             cascade = {
