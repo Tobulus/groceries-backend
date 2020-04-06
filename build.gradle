@@ -22,8 +22,8 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.palantir.docker'
 
 bootJar {
-    baseName = 'grocery'
-    version =  '0.1.0'
+    archiveBaseName = 'grocery'
+    archiveVersion =  '0.1.0'
 }
 
 repositories {
