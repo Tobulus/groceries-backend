@@ -40,7 +40,7 @@ public class WebSecurityConfig {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.antMatcher("/service/json/**")
+            http.antMatcher("/api/**")
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
