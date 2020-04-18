@@ -12,12 +12,13 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class GroceryListEntryJsonApi {
@@ -37,6 +38,22 @@ public class GroceryListEntryJsonApi {
         GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
         return groceryListEntryRepository.findByGroceryList(groceryList);
+    }
+
+    @PostMapping(value = "/api/grocery-list/{id}/entry/new")
+    public Map<String, String> newGroceryListEntry(@RequestParam("name") String name,
+                                                   @PathVariable Long id) throws IOException {
+        Map<String, String> response = new HashMap<>();
+
+        GroceryListEntry groceryListEntry = new GroceryListEntry();
+        groceryListEntry.setGroceryList(groceryListRepository.getOne(id));
+        groceryListEntry.setName(name);
+
+        groceryListEntryRepository.save(groceryListEntry);
+
+        response.put("result", "success");
+        response.put("id", groceryListEntry.getId().toString());
+        return response;
     }
 
     private UserPrincipal getUserPrincipalOrThrow() {
