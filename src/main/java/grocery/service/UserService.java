@@ -21,6 +21,7 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder crypt;
 
+    // TODO: is "Transactional" working that way?
     @Transactional
     public User createUser(UserDto userDto)
             throws EmailExistsException {
