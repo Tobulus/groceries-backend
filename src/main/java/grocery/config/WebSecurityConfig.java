@@ -42,6 +42,7 @@ public class WebSecurityConfig {
         protected void configure(HttpSecurity http) throws Exception {
             http.antMatcher("/api/**")
                 .authorizeRequests()
+                .antMatchers("/api/user/registration").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()
