@@ -56,6 +56,37 @@ public class GroceryListEntryJsonApi {
         return response;
     }
 
+    @PostMapping(value = "/api/grocery-list/{listId}/entry/{entryId}")
+    public void editGroceryListEntry(@RequestParam(value = "name", required = false) String name,
+                                     @RequestParam(value = "checked", required = false) Boolean checked,
+                                     @PathVariable Long listId,
+                                     @PathVariable Long entryId) {
+        GroceryListEntry groceryListEntry = fetchGroceryListEntry(listId, entryId);
+
+        if (name != null) {
+            groceryListEntry.setName(name);
+        }
+
+        if (checked != null) {
+            groceryListEntry.setChecked(checked);
+        }
+
+        groceryListEntryRepository.save(groceryListEntry);
+    }
+
+    @DeleteMapping(value = "/api/grocery-list/{listId}/entry/{entryId}/delete")
+    public void deleteGroceryListentry(@PathVariable Long listId, @PathVariable Long entryId) {
+        GroceryListEntry listEntry = fetchGroceryListEntry(listId, entryId);
+        groceryListEntryRepository.delete(listEntry);
+    }
+
+    private GroceryListEntry fetchGroceryListEntry(Long groceryListId, Long entryId) {
+        User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
+        GroceryList groceryList = groceryListRepository.findByIdAndUsers(groceryListId, currentUser).orElseThrow(
+                () -> new InvalidParameterException("List doesn't exist"));
+        return groceryListEntryRepository.findByGroceryListAndId(groceryList, entryId);
+    }
+
     private UserPrincipal getUserPrincipalOrThrow() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 

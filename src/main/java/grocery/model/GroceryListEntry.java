@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "grocerylistentries")
 public class GroceryListEntry {
-
+    // TODO: basic constraints: length, empty, ...
     @Id
     @Column(unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +22,9 @@ public class GroceryListEntry {
     private String name;
 
     private Double quantity;
+
+    @Column(unique = false, nullable = false)
+    private Boolean checked = false;
 
     public Long getId() {
         return id;
@@ -41,5 +44,13 @@ public class GroceryListEntry {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
     }
 }

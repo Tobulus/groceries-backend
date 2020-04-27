@@ -81,10 +81,19 @@ public class GroceryListEntryController {
     }
 
     @PostMapping(value = "/grocery-list/{listId}/entry/{entryId}")
-    public void editGroceryListEntry(@RequestParam("name") String name, @PathVariable Long listId,
+    public void editGroceryListEntry(@RequestParam(value = "name", required = false) String name,
+                                     @RequestParam(value = "checked", required = false) Boolean checked,
+                                     @PathVariable Long listId,
                                      @PathVariable Long entryId, HttpServletResponse response) throws IOException {
         GroceryListEntry groceryListEntry = fetchGroceryListEntry(listId, entryId);
-        groceryListEntry.setName(name);
+
+        if (name != null) {
+            groceryListEntry.setName(name);
+        }
+
+        if (checked != null) {
+            groceryListEntry.setChecked(checked);
+        }
 
         groceryListEntryRepository.save(groceryListEntry);
 
@@ -92,8 +101,7 @@ public class GroceryListEntryController {
     }
 
     @DeleteMapping(value = "/grocery-list/{listId}/entry/{entryId}/delete")
-    public void deleteGroceryListentry(@PathVariable Long listId, @PathVariable Long entryId,
-                                       HttpServletResponse response) throws IOException {
+    public void deleteGroceryListentry(@PathVariable Long listId, @PathVariable Long entryId) {
         GroceryListEntry listEntry = fetchGroceryListEntry(listId, entryId);
         groceryListEntryRepository.delete(listEntry);
     }

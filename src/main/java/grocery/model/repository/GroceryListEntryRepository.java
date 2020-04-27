@@ -10,4 +10,8 @@ public interface GroceryListEntryRepository extends CrudRepository<GroceryListEn
     List<GroceryListEntry> findByGroceryList(GroceryList groceryList);
 
     GroceryListEntry findByGroceryListAndId(GroceryList groceryList, Long id);
+
+    Long countByGroceryList(GroceryList groceryList);
+
+    Long countByGroceryListAndChecked(GroceryList groceryList, Boolean checked);
 }
