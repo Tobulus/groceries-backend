@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,10 +26,10 @@ public class GroceryList {
 
     @JsonBackReference
     @OneToMany(mappedBy = "groceryList", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GroceryListEntry> groceryListEntries;
+    private List<GroceryListEntry> groceryListEntries = new ArrayList<>();
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany
     @JoinTable(name = "users_grocerylists",
             joinColumns = {@JoinColumn(name = "grocerylists_id")},
             inverseJoinColumns = {@JoinColumn(name = "users_id")})

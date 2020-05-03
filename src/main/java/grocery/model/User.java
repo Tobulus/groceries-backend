@@ -26,12 +26,7 @@ public class User {
     private boolean enabled;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "users",
-            fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
+    @ManyToMany(mappedBy = "users")
     private Set<GroceryList> groceryLists = new HashSet<>();
 
     public Long getId() {
