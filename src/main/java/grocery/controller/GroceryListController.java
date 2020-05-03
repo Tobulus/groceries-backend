@@ -1,8 +1,10 @@
 package grocery.controller;
 
 import grocery.model.GroceryList;
+import grocery.model.Invitation;
 import grocery.model.User;
 import grocery.model.repository.GroceryListRepository;
+import grocery.model.repository.InvitationRepository;
 import grocery.model.repository.UserRepository;
 import grocery.service.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +22,13 @@ import java.security.InvalidParameterException;
 @Controller
 public class GroceryListController {
 
+    // TODO: check whether the additional fetching of objects is already done by table joins via hibernate
+
     @Autowired
     private GroceryListRepository groceryListRepository;
+
+    @Autowired
+    private InvitationRepository invitationRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -59,6 +66,23 @@ public class GroceryListController {
         response.sendRedirect("/grocery-lists");
     }
 
+    @PostMapping(value = "/grocery-list/{id}/invite")
+    public void share(@PathVariable Long id, @RequestParam Long user, HttpServletResponse response) throws IOException {
+        User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
+        GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
+                () -> new InvalidParameterException("List doesn't exist"));
+        User receiver = userRepository.findById(user).orElseThrow(
+                () -> new IllegalArgumentException("The invited user doesn't exist."));
+
+        Invitation invitation = new Invitation();
+        invitation.setSender(currentUser);
+        invitation.setReceiver(receiver);
+        invitation.setGroceryList(groceryList);
+        invitationRepository.save(invitation);
+
+        response.sendRedirect("/grocery-list/" + id);
+    }
+
     @GetMapping(value = "/grocery-list/new")
     public String newGroceryList(Model model) {
         model.addAttribute("groceryList", new GroceryList());
@@ -79,7 +103,7 @@ public class GroceryListController {
     }
 
     @DeleteMapping(value = "/grocery-list/{id}/delete")
-    public void deleteGroceryList(@PathVariable Long id, HttpServletResponse response) throws IOException {
+    public void deleteGroceryList(@PathVariable Long id) {
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
         GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));

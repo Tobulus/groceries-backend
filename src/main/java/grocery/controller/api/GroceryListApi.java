@@ -1,15 +1,14 @@
 package grocery.controller.api;
 
 import grocery.model.GroceryList;
+import grocery.model.Invitation;
 import grocery.model.User;
 import grocery.model.repository.GroceryListEntryRepository;
 import grocery.model.repository.GroceryListRepository;
+import grocery.model.repository.InvitationRepository;
 import grocery.model.repository.UserRepository;
 import grocery.service.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.InvalidParameterException;
@@ -18,13 +17,16 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class GroceryListJsonApi {
+public class GroceryListApi implements BasicApiController {
 
     @Autowired
     private GroceryListRepository groceryListRepository;
 
     @Autowired
     private GroceryListEntryRepository groceryListEntryRepository;
+
+    @Autowired
+    private InvitationRepository invitationRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -57,6 +59,26 @@ public class GroceryListJsonApi {
         return response;
     }
 
+    @PostMapping(value = "/api/grocery-list/{id}/invite")
+    public Map<String, String> share(@PathVariable Long id, @RequestParam String email) {
+        User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
+        GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
+                () -> new InvalidParameterException("List doesn't exist"));
+        User receiver = userRepository.findByUsername(email).orElseThrow(
+                () -> new IllegalArgumentException("The invited user doesn't exist."));
+
+        Map<String, String> result = new HashMap<>();
+
+        Invitation invitation = new Invitation();
+        invitation.setSender(currentUser);
+        invitation.setReceiver(receiver);
+        invitation.setGroceryList(groceryList);
+        invitationRepository.save(invitation);
+        result.put("result", "success");
+
+        return result;
+    }
+
     @DeleteMapping(value = "/api/grocery-list/{id}/delete")
     public Map<String, String> deleteGroceryList(@PathVariable Long id) {
         Map<String, String> result = new HashMap<>();
@@ -68,15 +90,5 @@ public class GroceryListJsonApi {
 
         result.put("result", "success");
         return result;
-    }
-
-    private UserPrincipal getUserPrincipalOrThrow() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth instanceof AnonymousAuthenticationToken) {
-            throw new RuntimeException("Please log in");
-        }
-
-        return (UserPrincipal) auth.getPrincipal();
     }
 }
