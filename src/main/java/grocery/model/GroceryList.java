@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@NamedEntityGraph(name = "GroceryList.Users", attributeNodes = @NamedAttributeNode(value = "users"))
 @Entity
 @Table(name = "grocerylists")
 public class GroceryList {

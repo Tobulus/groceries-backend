@@ -29,17 +29,19 @@ public class InvitationApi implements BasicApiController {
     @GetMapping(value = "/api/invitations")
     public List<Invitation> invitations() {
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
-        return invitationRepository.findByReceiver(currentUser);
+        return invitationRepository.findByReceiverAndAcknowledgedAndDenied(currentUser, false, false);
     }
 
     @PostMapping(value = "/api/invitation/{id}")
-    public Map<String, String> editInvitation(@PathVariable Long id, @RequestParam Boolean ack,
-                                              @RequestParam Boolean deny) {
+    public Map<String, String> editInvitation(@PathVariable Long id, @RequestParam(required = false) Boolean ack,
+                                              @RequestParam(required = false) Boolean deny) {
         Map<String, String> result = new HashMap<>();
 
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
-        Invitation invitation = invitationRepository.findByIdAndReceiver(id, currentUser).orElseThrow(
-                () -> new InvalidParameterException("Invitation doesn't exist."));
+        Invitation invitation =
+                invitationRepository.findByIdAndReceiverAndAcknowledgedAndDenied(id, currentUser, false, false)
+                                    .orElseThrow(
+                                            () -> new InvalidParameterException("Invitation doesn't exist."));
 
         if (ack != null) {
             invitation.setAcknowledged(ack);
@@ -52,7 +54,10 @@ public class InvitationApi implements BasicApiController {
         invitation = invitationRepository.save(invitation);
 
         if (invitation.isAcknowledged()) {
-            GroceryList list = invitation.getGroceryList();
+            // TODO: can this be done without the additional fetching?
+            Long listId = invitation.getGroceryList().getId();
+            GroceryList list = groceryListRepository.findEagerUsersById(listId).orElseThrow(
+                    () -> new InvalidParameterException("Can't find grocerylist with id " + listId));
             list.getUsers().add(currentUser);
             groceryListRepository.save(list);
         }
