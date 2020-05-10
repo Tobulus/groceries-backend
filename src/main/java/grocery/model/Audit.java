@@ -19,15 +19,13 @@ public class Audit {
     @LastModifiedDate
     private Long modifiedDate;
 
-    // TODO: set
     @Column(name = "created_by")
     @CreatedBy
-    private String createdBy;
+    private Long createdBy;
 
-    // TODO: set
     @Column(name = "modified_by")
     @LastModifiedBy
-    private String modifiedBy;
+    private Long modifiedBy;
 
     public long getCreatedDate() {
         return createdDate;
@@ -45,19 +43,19 @@ public class Audit {
         this.modifiedDate = modifiedDate;
     }
 
-    public String getCreatedBy() {
+    public Long getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(String createdBy) {
+    public void setCreatedBy(Long createdBy) {
         this.createdBy = createdBy;
     }
 
-    public String getModifiedBy() {
+    public Long getModifiedBy() {
         return modifiedBy;
     }
 
-    public void setModifiedBy(String modifiedBy) {
+    public void setModifiedBy(Long modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 }
