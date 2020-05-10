@@ -1,12 +1,14 @@
 package grocery.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "grocerylistentries")
-public class GroceryListEntry {
+public class GroceryListEntry extends Audit {
     // TODO: basic constraints: length, empty, ...
     @Id
     @Column(unique = true, nullable = false)

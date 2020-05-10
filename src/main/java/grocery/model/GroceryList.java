@@ -2,6 +2,7 @@ package grocery.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -10,9 +11,10 @@ import java.util.List;
 import java.util.Set;
 
 @NamedEntityGraph(name = "GroceryList.Users", attributeNodes = @NamedAttributeNode(value = "users"))
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "grocerylists")
-public class GroceryList {
+public class GroceryList extends Audit {
     // TODO: cascades
     // TODO: helper methods in order to sync the two models
     // TODO: basic constraints: length, empty, ...
