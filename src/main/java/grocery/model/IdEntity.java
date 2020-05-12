@@ -1,8 +1,6 @@
 package grocery.model;
 
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.jpa.domain.AbstractPersistable;
-import org.springframework.data.util.ProxyUtils;
 
 import javax.persistence.*;
 
@@ -43,11 +41,11 @@ public abstract class IdEntity implements Persistable<Long> {
             return true;
         }
 
-        if (!getClass().equals(ProxyUtils.getUserClass(obj))) {
+        if (!(obj instanceof IdEntity)) {
             return false;
         }
 
-        AbstractPersistable<?> that = (AbstractPersistable<?>) obj;
+        IdEntity that = (IdEntity) obj;
 
         return null != this.getId() && this.getId().equals(that.getId());
     }
