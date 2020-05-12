@@ -2,18 +2,16 @@ package grocery.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
-
-    @Id
-    @Column(unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends IdEntity {
 
     @Column(unique = true, nullable = false)
     private String username;
@@ -28,10 +26,6 @@ public class User {
     @JsonIgnore
     @ManyToMany(mappedBy = "users")
     private Set<GroceryList> groceryLists = new HashSet<>();
-
-    public Long getId() {
-        return id;
-    }
 
     public String getUsername() {
         return username;

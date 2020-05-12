@@ -8,12 +8,7 @@ import java.security.InvalidParameterException;
         subgraphs = @NamedSubgraph(name = "users", attributeNodes = @NamedAttributeNode(value = "users")))
 @Entity
 @Table(name = "invitations")
-public class Invitation {
-
-    @Id
-    @Column(unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Invitation extends IdEntity {
 
     @ManyToOne(optional = false)
     private GroceryList groceryList;
@@ -35,10 +30,6 @@ public class Invitation {
         if (acknowledged && denied) {
             throw new InvalidParameterException("Invitation cannot be acknowdledge and denied at the same time.");
         }
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public User getSender() {

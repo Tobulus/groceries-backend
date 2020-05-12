@@ -6,6 +6,7 @@ import grocery.model.User;
 import grocery.model.repository.GroceryListRepository;
 import grocery.model.repository.InvitationRepository;
 import grocery.model.repository.UserRepository;
+import grocery.service.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,9 @@ public class InvitationApi implements BasicApiController {
 
     @GetMapping(value = "/api/invitations")
     public List<Invitation> invitations() {
-        User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
+        UserPrincipal principal = getUserPrincipalOrThrow();
+        User currentUser = userRepository.findById(principal.getUserId()).orElseThrow(
+                () -> new InvalidParameterException("Cannot find user with id: " + principal.getUserId()));
         return invitationRepository.findByReceiverAndAcknowledgedAndDenied(currentUser, false, false);
     }
 
@@ -36,8 +39,9 @@ public class InvitationApi implements BasicApiController {
     public Map<String, String> editInvitation(@PathVariable Long id, @RequestParam(required = false) Boolean ack,
                                               @RequestParam(required = false) Boolean deny) {
         Map<String, String> result = new HashMap<>();
-
-        User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
+        UserPrincipal principal = getUserPrincipalOrThrow();
+        User currentUser = userRepository.findById(principal.getUserId()).orElseThrow(
+                () -> new InvalidParameterException("Cannot find user with id: " + principal.getUserId()));
         Invitation invitation =
                 invitationRepository.findByIdAndReceiverAndAcknowledgedAndDenied(id, currentUser, false, false)
                                     .orElseThrow(

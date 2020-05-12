@@ -28,7 +28,8 @@ public class UserService {
         if (userDetailsManager.userExists(userDto.getUsername())) {
             throw new EmailExistsException("There is an account with that email address:" + userDto.getUsername());
         }
-        User user = new User(userDto.getUsername(), crypt.encode(userDto.getPassword()), Collections.singletonList(new SimpleGrantedAuthority("USER")));
+        User user = new User(userDto.getUsername(), crypt.encode(userDto.getPassword()),
+                             Collections.singletonList(new SimpleGrantedAuthority("USER")));
         userDetailsManager.createUser(user);
 
         return user;

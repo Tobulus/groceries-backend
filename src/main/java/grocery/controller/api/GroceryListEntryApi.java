@@ -6,6 +6,7 @@ import grocery.model.User;
 import grocery.model.repository.GroceryListEntryRepository;
 import grocery.model.repository.GroceryListRepository;
 import grocery.model.repository.UserRepository;
+import grocery.service.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,9 @@ public class GroceryListEntryApi implements BasicApiController {
 
     @GetMapping(value = "/api/grocery-list/{id}/entries")
     public List<GroceryListEntry> listGroceryListEntries(@PathVariable Long id, Model model) {
-        User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
+        UserPrincipal principal = getUserPrincipalOrThrow();
+        User currentUser = userRepository.findById(principal.getUserId()).orElseThrow(
+                () -> new InvalidParameterException("Cannot find user with id: " + principal.getUserId()));
         GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
         return groceryListEntryRepository.findByGroceryList(groceryList);
@@ -42,7 +45,8 @@ public class GroceryListEntryApi implements BasicApiController {
         Map<String, String> response = new HashMap<>();
 
         GroceryListEntry groceryListEntry = new GroceryListEntry();
-        groceryListEntry.setGroceryList(groceryListRepository.getOne(id));
+        groceryListEntry.setGroceryList(groceryListRepository.findById(id).orElseThrow(
+                () -> new InvalidParameterException("Cannot find list with id: " + id)));
         groceryListEntry.setName(name);
 
         groceryListEntryRepository.save(groceryListEntry);
@@ -77,7 +81,9 @@ public class GroceryListEntryApi implements BasicApiController {
     }
 
     private GroceryListEntry fetchGroceryListEntry(Long groceryListId, Long entryId) {
-        User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
+        UserPrincipal principal = getUserPrincipalOrThrow();
+        User currentUser = userRepository.findById(principal.getUserId()).orElseThrow(
+                () -> new InvalidParameterException("Cannot find user with id: " + principal.getUserId()));
         GroceryList groceryList = groceryListRepository.findByIdAndUsers(groceryListId, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
         return groceryListEntryRepository.findByGroceryListAndId(groceryList, entryId);

@@ -8,12 +8,8 @@ import javax.persistence.*;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "grocerylistentries")
-public class GroceryListEntry extends Audit {
+public class GroceryListEntry extends IdEntity {
     // TODO: basic constraints: length, empty, ...
-    @Id
-    @Column(unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @JsonManagedReference
     @ManyToOne
@@ -28,9 +24,8 @@ public class GroceryListEntry extends Audit {
     @Column(unique = false, nullable = false)
     private Boolean checked = false;
 
-    public Long getId() {
-        return id;
-    }
+    @Embedded
+    private final Audit audit = new Audit();
 
     public GroceryList getGroceryList() {
         return groceryList;
@@ -54,5 +49,9 @@ public class GroceryListEntry extends Audit {
 
     public void setChecked(Boolean checked) {
         this.checked = checked;
+    }
+
+    public Audit getAudit() {
+        return audit;
     }
 }

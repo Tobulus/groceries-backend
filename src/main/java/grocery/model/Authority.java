@@ -1,15 +1,12 @@
 package grocery.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Table(name = "authorities")
 @Entity
-public class Authority {
-
-    @Id
-    @Column(unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Authority extends IdEntity {
 
     @Column(nullable = false)
     private String username;
