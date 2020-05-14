@@ -22,6 +22,8 @@ import java.security.InvalidParameterException;
 @Controller
 public class GroceryListController {
 
+    // TODO: check whether the additional fetching of objects is already done by table joins via hibernate
+
     @Autowired
     private GroceryListRepository groceryListRepository;
 
@@ -35,20 +37,14 @@ public class GroceryListController {
     public String groceryLists(Model model) {
         UserPrincipal currentUser = getUserPrincipalOrThrow();
         model.addAttribute("groceryLists",
-                           groceryListRepository.findByUsers(userRepository.findById(currentUser.getUserId())
-                                                                           .orElseThrow(
-                                                                                   () -> new InvalidParameterException(
-                                                                                           "Cannot find user with id: " +
-                                                                                           currentUser.getUserId()))));
+                           groceryListRepository.findByUsers(userRepository.getOne(currentUser.getUserId())));
 
         return "/grocery-list/grocery-lists";
     }
 
     @GetMapping(value = "/grocery-list/{id}")
     public String editGroceryList(@PathVariable Long id, Model model) {
-        UserPrincipal principal = getUserPrincipalOrThrow();
-        User currentUser = userRepository.findById(principal.getUserId()).orElseThrow(
-                () -> new InvalidParameterException("Cannot find user with id: " + principal.getUserId()));
+        User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
         GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
         model.addAttribute("groceryList", groceryList);
@@ -59,9 +55,7 @@ public class GroceryListController {
     @PostMapping(value = "/grocery-list/{id}")
     public void editGroceryList(@PathVariable Long id, @RequestParam String name,
                                 HttpServletResponse response) throws IOException {
-        UserPrincipal principal = getUserPrincipalOrThrow();
-        User currentUser = userRepository.findById(principal.getUserId()).orElseThrow(
-                () -> new InvalidParameterException("Cannot find user with id: " + principal.getUserId()));
+        User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
         GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
 
@@ -74,9 +68,7 @@ public class GroceryListController {
 
     @PostMapping(value = "/grocery-list/{id}/invite")
     public void share(@PathVariable Long id, @RequestParam Long user, HttpServletResponse response) throws IOException {
-        UserPrincipal principal = getUserPrincipalOrThrow();
-        User currentUser = userRepository.findById(principal.getUserId()).orElseThrow(
-                () -> new InvalidParameterException("Cannot find user with id: " + principal.getUserId()));
+        User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
         GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
         User receiver = userRepository.findById(user).orElseThrow(
@@ -103,8 +95,7 @@ public class GroceryListController {
 
         GroceryList groceryList = new GroceryList();
         groceryList.setName(name);
-        groceryList.getUsers().add(userRepository.findById(currentUser.getUserId()).orElseThrow(
-                () -> new InvalidParameterException("Cannot find user with id: " + currentUser.getUserId())));
+        groceryList.getUsers().add(userRepository.getOne(currentUser.getUserId()));
 
         groceryListRepository.save(groceryList);
 
@@ -113,10 +104,8 @@ public class GroceryListController {
 
     @DeleteMapping(value = "/grocery-list/{id}/delete")
     public void deleteGroceryList(@PathVariable Long id) {
-        UserPrincipal currentUser = getUserPrincipalOrThrow();
-        User user = userRepository.findById(currentUser.getUserId()).orElseThrow(
-                () -> new InvalidParameterException("Cannot find user with id: " + currentUser.getUserId()));
-        GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, user).orElseThrow(
+        User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
+        GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
 
         groceryListRepository.delete(groceryList);

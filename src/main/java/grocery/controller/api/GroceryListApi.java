@@ -35,8 +35,7 @@ public class GroceryListApi implements BasicApiController {
     public List<GroceryList> groceryLists() {
         UserPrincipal currentUser = getUserPrincipalOrThrow();
         List<GroceryList> groceryLists =
-                groceryListRepository.findByUsers(userRepository.findById(currentUser.getUserId()).orElseThrow(
-                        () -> new InvalidParameterException("Cannot find user with id: " + currentUser.getUserId())));
+                groceryListRepository.findByUsers(userRepository.getOne(currentUser.getUserId()));
         // TODO: caching
         groceryLists.forEach(list -> {
             list.setNumberOfEntries(groceryListEntryRepository.countByGroceryList(list));
@@ -52,8 +51,7 @@ public class GroceryListApi implements BasicApiController {
 
         GroceryList groceryList = new GroceryList();
         groceryList.setName(name);
-        groceryList.getUsers().add(userRepository.findById(currentUser.getUserId()).orElseThrow(
-                () -> new InvalidParameterException("Cannot find user with id: " + currentUser.getUserId())));
+        groceryList.getUsers().add(userRepository.getOne(currentUser.getUserId()));
 
         groceryListRepository.save(groceryList);
         response.put("result", "success");
@@ -63,9 +61,7 @@ public class GroceryListApi implements BasicApiController {
 
     @PostMapping(value = "/api/grocery-list/{id}/invite")
     public Map<String, String> share(@PathVariable Long id, @RequestParam String email) {
-        UserPrincipal principal = getUserPrincipalOrThrow();
-        User currentUser = userRepository.findById(principal.getUserId()).orElseThrow(
-                () -> new InvalidParameterException("Cannot find user with id: " + principal.getUserId()));
+        User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
         GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
         User receiver = userRepository.findByUsername(email).orElseThrow(
@@ -87,9 +83,7 @@ public class GroceryListApi implements BasicApiController {
     public Map<String, String> deleteGroceryList(@PathVariable Long id) {
         Map<String, String> result = new HashMap<>();
 
-        UserPrincipal principal = getUserPrincipalOrThrow();
-        User currentUser = userRepository.findById(principal.getUserId()).orElseThrow(
-                () -> new InvalidParameterException("Cannot find user with id: " + principal.getUserId()));
+        User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
         GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
         groceryListRepository.delete(groceryList);

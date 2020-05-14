@@ -30,7 +30,8 @@ public abstract class IdEntity implements Persistable<Long> {
         return String.format("Entity of type %s with id: %s", this.getClass().getName(), getId());
     }
 
-    @Override
+    // TODO: once we override this method, we cannot use getOne() from the jpa repositories anymore because of some lazyinit exception
+    /*@Override
     public boolean equals(Object obj) {
 
         if (null == obj) {
@@ -48,8 +49,9 @@ public abstract class IdEntity implements Persistable<Long> {
         IdEntity that = (IdEntity) obj;
 
         return null != this.getId() && this.getId().equals(that.getId());
-    }
+    }*/
 
+    // TODO: there is a lot of controversy about overriding equals/hashcode/toString for entities -> check
     @Override
     public int hashCode() {
 
