@@ -8,9 +8,6 @@ import grocery.model.repository.InvitationRepository;
 import grocery.model.repository.UserRepository;
 import grocery.service.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +17,7 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 
 @Controller
-public class GroceryListController {
+public class GroceryListController implements BasicApiController {
 
     // TODO: check whether the additional fetching of objects is already done by table joins via hibernate
 
@@ -109,15 +106,5 @@ public class GroceryListController {
                 () -> new InvalidParameterException("List doesn't exist"));
 
         groceryListRepository.delete(groceryList);
-    }
-
-    private UserPrincipal getUserPrincipalOrThrow() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth instanceof AnonymousAuthenticationToken) {
-            throw new RuntimeException("Please log in");
-        }
-
-        return (UserPrincipal) auth.getPrincipal();
     }
 }

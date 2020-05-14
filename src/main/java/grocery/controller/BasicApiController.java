@@ -1,4 +1,4 @@
-package grocery.controller.api;
+package grocery.controller;
 
 import grocery.service.UserPrincipal;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;

@@ -6,11 +6,7 @@ import grocery.model.User;
 import grocery.model.repository.GroceryListEntryRepository;
 import grocery.model.repository.GroceryListRepository;
 import grocery.model.repository.UserRepository;
-import grocery.service.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +17,7 @@ import java.security.InvalidParameterException;
 import java.util.List;
 
 @Controller
-public class GroceryListEntryController {
+public class GroceryListEntryController implements BasicApiController {
 
     // TODO: better user checking
 
@@ -111,15 +107,5 @@ public class GroceryListEntryController {
         GroceryList groceryList = groceryListRepository.findByIdAndUsers(groceryListId, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
         return groceryListEntryRepository.findByGroceryListAndId(groceryList, entryId);
-    }
-
-    private UserPrincipal getUserPrincipalOrThrow() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth instanceof AnonymousAuthenticationToken) {
-            throw new RuntimeException("Please log in");
-        }
-
-        return (UserPrincipal) auth.getPrincipal();
     }
 }

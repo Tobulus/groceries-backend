@@ -1,5 +1,6 @@
 package grocery.controller.api;
 
+import grocery.controller.BasicApiController;
 import grocery.model.GroceryList;
 import grocery.model.GroceryListEntry;
 import grocery.model.User;
