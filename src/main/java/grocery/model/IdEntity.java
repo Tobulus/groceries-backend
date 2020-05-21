@@ -1,5 +1,6 @@
 package grocery.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public abstract class IdEntity implements Persistable<Long> {
         this.id = id;
     }
 
+    @JsonIgnore
     @Transient
     public boolean isNew() {
         return null == getId();

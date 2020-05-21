@@ -1,5 +1,6 @@
 package grocery.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -24,6 +25,7 @@ public class GroceryListEntry extends IdEntity {
     @Column(unique = false, nullable = false)
     private Boolean checked = false;
 
+    @JsonBackReference
     @Embedded
     private final Audit audit = new Audit();
 

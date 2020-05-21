@@ -33,6 +33,7 @@ public class GroceryList extends IdEntity {
             inverseJoinColumns = {@JoinColumn(name = "users_id")})
     private Set<User> users = new HashSet<>();
 
+    @JsonBackReference
     @Embedded
     private final Audit audit = new Audit();
 
