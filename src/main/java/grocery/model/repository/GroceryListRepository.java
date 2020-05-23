@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface GroceryListRepository extends JpaRepository<GroceryList, Long> {
+public interface GroceryListRepository extends JpaRepository<GroceryList, Long>, CustomGroceryListRepository {
     List<GroceryList> findByUsers(User user);
 
     Optional<GroceryList> findByIdAndUsers(Long id, User user);

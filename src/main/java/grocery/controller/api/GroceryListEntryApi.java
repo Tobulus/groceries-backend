@@ -1,6 +1,6 @@
 package grocery.controller.api;
 
-import grocery.controller.BasicApiController;
+import grocery.controller.BasicController;
 import grocery.model.GroceryList;
 import grocery.model.GroceryListEntry;
 import grocery.model.User;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class GroceryListEntryApi implements BasicApiController {
+public class GroceryListEntryApi implements BasicController {
 
     @Autowired
     private GroceryListRepository groceryListRepository;

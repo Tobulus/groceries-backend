@@ -10,6 +10,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@SqlResultSetMapping(name = "groceryListWithEntriesInfo",
+        entities = @EntityResult(entityClass = GroceryList.class),
+        columns = {@ColumnResult(name = "numberOfEntries"),
+                @ColumnResult(name = "numberOfCheckedEntries")})
 @NamedEntityGraph(name = "GroceryList.Users", attributeNodes = @NamedAttributeNode(value = "users"))
 @EntityListeners(AuditingEntityListener.class)
 @Entity
@@ -41,6 +45,15 @@ public class GroceryList extends IdEntity {
     private Long numberOfEntries;
     @Transient
     private Long numberOfCheckedEntries;
+
+    /*public GroceryList() {
+    }
+
+    public GroceryList(Long id, String name, Long numberOfEntries) {
+        setId(id);
+        this.name = name;
+        this.numberOfEntries = numberOfEntries;
+    }*/
 
     public String getName() {
         return name;

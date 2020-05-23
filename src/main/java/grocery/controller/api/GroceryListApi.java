@@ -1,6 +1,6 @@
 package grocery.controller.api;
 
-import grocery.controller.BasicApiController;
+import grocery.controller.BasicController;
 import grocery.model.GroceryList;
 import grocery.model.Invitation;
 import grocery.model.User;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class GroceryListApi implements BasicApiController {
+public class GroceryListApi implements BasicController {
 
     @Autowired
     private GroceryListRepository groceryListRepository;
@@ -35,14 +35,7 @@ public class GroceryListApi implements BasicApiController {
     @GetMapping(value = "/api/grocery-lists")
     public List<GroceryList> groceryLists() {
         UserPrincipal currentUser = getUserPrincipalOrThrow();
-        List<GroceryList> groceryLists =
-                groceryListRepository.findByUsers(userRepository.getOne(currentUser.getUserId()));
-        // TODO: caching
-        groceryLists.forEach(list -> {
-            list.setNumberOfEntries(groceryListEntryRepository.countByGroceryList(list));
-            list.setNumberOfCheckedEntries(groceryListEntryRepository.countByGroceryListAndChecked(list, true));
-        });
-        return groceryLists;
+        return groceryListRepository.fetchLists(userRepository.getOne(currentUser.getUserId()));
     }
 
     @PostMapping(value = "/api/grocery-list/new")

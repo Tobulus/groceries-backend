@@ -17,7 +17,7 @@ import java.security.InvalidParameterException;
 import java.util.List;
 
 @Controller
-public class GroceryListEntryController implements BasicApiController {
+public class GroceryListEntryController implements BasicController {
 
     // TODO: better user checking
 

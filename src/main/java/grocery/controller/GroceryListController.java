@@ -12,12 +12,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 
 @Controller
-public class GroceryListController implements BasicApiController {
+public class GroceryListController implements BasicController {
 
     // TODO: check whether the additional fetching of objects is already done by table joins via hibernate
 
@@ -30,11 +31,15 @@ public class GroceryListController implements BasicApiController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EntityManager em;
+
     @GetMapping(value = "/grocery-lists")
     public String groceryLists(Model model) {
         UserPrincipal currentUser = getUserPrincipalOrThrow();
+
         model.addAttribute("groceryLists",
-                           groceryListRepository.findByUsers(userRepository.getOne(currentUser.getUserId())));
+                           groceryListRepository.fetchLists(userRepository.getOne(currentUser.getUserId())));
 
         return "/grocery-list/grocery-lists";
     }
