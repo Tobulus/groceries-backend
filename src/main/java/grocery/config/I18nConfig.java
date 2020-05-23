@@ -9,7 +9,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 @Configuration
 @ComponentScan("org.springframework.security.samples.mvc")
-public class MvcConfig implements WebMvcConfigurer {
+public class I18nConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
