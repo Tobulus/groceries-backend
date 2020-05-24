@@ -1,6 +1,7 @@
 package grocery.service;
 
 import grocery.model.UserDto;
+import grocery.model.repository.UserRepository;
 import grocery.model.validation.EmailExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,6 +11,7 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.security.InvalidParameterException;
 import java.util.Collections;
 
 @Service
@@ -21,6 +23,9 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder crypt;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Transactional
     public User createUser(UserDto userDto)
             throws EmailExistsException {
@@ -28,9 +33,18 @@ public class UserService {
         if (userDetailsManager.userExists(userDto.getUsername())) {
             throw new EmailExistsException("There is an account with that email address:" + userDto.getUsername());
         }
+
+        // create basic user
         User user = new User(userDto.getUsername(), crypt.encode(userDto.getPassword()),
                              Collections.singletonList(new SimpleGrantedAuthority("USER")));
         userDetailsManager.createUser(user);
+
+        // update additional fields
+        grocery.model.User entity = userRepository.findByUsername(user.getUsername()).orElseThrow(
+                () -> new InvalidParameterException("Cannot find previously saved user object: " + user.getUsername()));
+        entity.setFirstname(userDto.getFirstname());
+        entity.setLastname(userDto.getLastname());
+        userRepository.save(entity);
 
         return user;
     }

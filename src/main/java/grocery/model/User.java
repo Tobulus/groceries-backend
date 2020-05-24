@@ -16,6 +16,10 @@ public class User extends IdEntity {
     @Column(unique = true, nullable = false)
     private String username;
 
+    private String firstname;
+
+    private String lastname;
+
     @JsonIgnore
     @Column(nullable = false)
     private String password;
@@ -57,5 +61,21 @@ public class User extends IdEntity {
 
     public void setGroceryLists(Set<GroceryList> groceryLists) {
         this.groceryLists = groceryLists;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 }

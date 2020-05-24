@@ -43,17 +43,9 @@ public class GroceryList extends IdEntity {
 
     @Transient
     private Long numberOfEntries;
+
     @Transient
     private Long numberOfCheckedEntries;
-
-    /*public GroceryList() {
-    }
-
-    public GroceryList(Long id, String name, Long numberOfEntries) {
-        setId(id);
-        this.name = name;
-        this.numberOfEntries = numberOfEntries;
-    }*/
 
     public String getName() {
         return name;

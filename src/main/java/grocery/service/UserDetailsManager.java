@@ -19,7 +19,7 @@ public class UserDetailsManager extends JdbcUserDetailsManager {
 
     @Override
     protected List<UserDetails> loadUsersByUsername(String username) {
-        return getJdbcTemplate().query("select id,username,password,enabled "
+        return getJdbcTemplate().query("select id,username,password,enabled,firstname,lastname "
                                        + "from users " + "where username = ?",
                                        new String[]{username}, new RowMapper<UserDetails>() {
                     @Override
@@ -29,7 +29,9 @@ public class UserDetailsManager extends JdbcUserDetailsManager {
                         String username = rs.getString(2);
                         String password = rs.getString(3);
                         boolean enabled = rs.getBoolean(4);
-                        return new UserPrincipal(id, username, password, enabled, true, true, true,
+                        String firstname = rs.getString(5);
+                        String lastname = rs.getString(6);
+                        return new UserPrincipal(id, username, password, firstname, lastname, enabled, true, true, true,
                                                  AuthorityUtils.NO_AUTHORITIES);
                     }
 
