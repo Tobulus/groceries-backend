@@ -1,4 +1,4 @@
-group 'tobsucht'
+group 'rmbr'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -22,7 +22,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.palantir.docker'
 
 bootJar {
-    archiveBaseName = 'grocery'
+    archiveBaseName = 'rmbr'
     archiveVersion =  '0.1.0'
 }
 
@@ -52,7 +52,8 @@ task unpack(type: Copy) {
 }
 
 docker {
-    name "${project.group}/${bootJar.baseName}"
+    name "${project.name}:${project.version}"
     copySpec.from(tasks.unpack.outputs).into("dependency")
     buildArgs(['DEPENDENCY': "dependency"])
 }
+
