@@ -1,4 +1,4 @@
-group 'rmbr'
+group 'remembrall'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -22,7 +22,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.palantir.docker'
 
 bootJar {
-    archiveBaseName = 'rmbr'
+    archiveBaseName = 'remembrall'
     archiveVersion =  '0.1.0'
 }
 
