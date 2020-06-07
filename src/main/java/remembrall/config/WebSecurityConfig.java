@@ -25,6 +25,8 @@ import java.util.HashMap;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
+    private static final int SESSION_TIMEOUT_30_DAYS = 60 * 60 * 24 * 30;
+
     @EnableSpringHttpSession
     @Configuration
     @Order(1)
@@ -37,7 +39,9 @@ public class WebSecurityConfig {
 
         @Bean
         public MapSessionRepository mapSessionRepository() {
-            return new MapSessionRepository(new HashMap<>());
+            MapSessionRepository repository = new MapSessionRepository(new HashMap<>());
+            repository.setDefaultMaxInactiveInterval(SESSION_TIMEOUT_30_DAYS);
+            return repository;
         }
 
         @Override
