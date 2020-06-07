@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-// TODO: this needs to be removed, else malicious code could use the /api** API in order to circumvent CSRF protection
 public class SmartHttpSessionIdResolver implements HttpSessionIdResolver {
 
     private static final String HEADER_X_AUTH_TOKEN = "X-Auth-Token";
