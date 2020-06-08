@@ -53,6 +53,16 @@ public class GroceryListApi implements BasicController {
         return response;
     }
 
+    @PostMapping(value = "/api/grocery-list/{id}")
+    public void editGroceryList(@PathVariable Long id, @RequestParam String name) {
+        User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
+        GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
+                () -> new InvalidParameterException("List doesn't exist"));
+
+        groceryList.setName(name);
+        groceryListRepository.save(groceryList);
+    }
+
     @PostMapping(value = "/api/grocery-list/{id}/invite")
     public Map<String, String> share(@PathVariable Long id, @RequestParam String email) {
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
