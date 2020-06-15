@@ -30,6 +30,10 @@ public class GroceryList extends IdEntity {
     @OneToMany(mappedBy = "groceryList", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GroceryListEntry> groceryListEntries = new ArrayList<>();
 
+    @JsonBackReference
+    @OneToMany(mappedBy = "groceryList", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Invitation> invitations = new ArrayList<>();
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(name = "users_grocerylists",
@@ -89,5 +93,9 @@ public class GroceryList extends IdEntity {
 
     public Audit getAudit() {
         return audit;
+    }
+
+    public List<Invitation> getInvitations() {
+        return invitations;
     }
 }
