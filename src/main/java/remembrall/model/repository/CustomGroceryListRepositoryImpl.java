@@ -19,7 +19,7 @@ public class CustomGroceryListRepositoryImpl implements CustomGroceryListReposit
     private UserRepository userRepository;
 
     @Override
-    public List<GroceryList> fetchLists(User user) {
+    public List<GroceryList> fetchLists(User user, boolean archived) {
         /*CriteriaBuilder cb = em.getCriteriaBuilder();
 
         CriteriaQuery<GroceryList> query = cb.createQuery(GroceryList.class);
@@ -36,15 +36,17 @@ public class CustomGroceryListRepositoryImpl implements CustomGroceryListReposit
         em.createQuery(query).getResultList();*/
 
         List<GroceryList> result = new ArrayList<>();
+        int archivedInt = archived ? 1 : 0;
         Query
                 query = em.createNativeQuery(
-                "SELECT gl.id, gl.name, gl.created_by as created_by, gl.created_date as created_date, gl.modified_by as modified_by, gl.modified_date as modified_date, count(gle.grocerylist_id) as numberOfEntries, count(case when gle.checked then 1 end) as numberOfCheckedEntries " +
+                "SELECT gl.id, gl.name, gl.archived, gl.created_by as created_by, gl.created_date as created_date, gl.modified_by as modified_by, gl.modified_date as modified_date, count(gle.grocerylist_id) as numberOfEntries, count(case when gle.checked then 1 end) as numberOfCheckedEntries " +
                 "FROM grocerylists gl " +
                 "LEFT JOIN grocerylistentries gle ON gl.id = gle.grocerylist_id " +
                 "INNER JOIN users_grocerylists glu ON gl.id = glu.grocerylists_id " +
-                "WHERE glu.users_id = :user " +
+                "WHERE glu.users_id = :user AND gl.archived = :archived " +
                 "GROUP BY gl.id;", "groceryListWithEntriesInfo");
         query.setParameter("user", user.getId());
+        query.setParameter("archived", archivedInt);
 
         for (Object[] row : (List<Object[]>) query.getResultList()) {
             GroceryList list = (GroceryList) row[0];

@@ -6,5 +6,5 @@ import remembrall.model.User;
 import java.util.List;
 
 public interface CustomGroceryListRepository {
-    List<GroceryList> fetchLists(User user);
+    List<GroceryList> fetchLists(User user, boolean archived);
 }

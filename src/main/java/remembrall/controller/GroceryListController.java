@@ -39,7 +39,7 @@ public class GroceryListController implements BasicController {
         UserPrincipal currentUser = getUserPrincipalOrThrow();
 
         model.addAttribute("groceryLists",
-                           groceryListRepository.fetchLists(userRepository.getOne(currentUser.getUserId())));
+                           groceryListRepository.fetchLists(userRepository.getOne(currentUser.getUserId()), false));
 
         return "/grocery-list/grocery-lists";
     }

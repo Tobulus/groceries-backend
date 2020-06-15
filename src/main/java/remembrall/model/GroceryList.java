@@ -23,8 +23,11 @@ public class GroceryList extends IdEntity {
     // TODO: helper methods in order to sync the two models
     // TODO: basic constraints: length, empty, ...
 
-    @Column(unique = false, nullable = false)
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private boolean archived = false;
 
     @JsonBackReference
     @OneToMany(mappedBy = "groceryList", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -97,5 +100,13 @@ public class GroceryList extends IdEntity {
 
     public List<Invitation> getInvitations() {
         return invitations;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 }
