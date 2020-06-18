@@ -21,6 +21,9 @@ public class User extends IdEntity {
     private String lastname;
 
     @JsonIgnore
+    private String token;
+
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
@@ -77,5 +80,13 @@ public class User extends IdEntity {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

@@ -10,6 +10,7 @@ import remembrall.model.repository.GroceryListEntryRepository;
 import remembrall.model.repository.GroceryListRepository;
 import remembrall.model.repository.InvitationRepository;
 import remembrall.model.repository.UserRepository;
+import remembrall.service.PushService;
 import remembrall.service.UserPrincipal;
 
 import java.security.InvalidParameterException;
@@ -31,6 +32,9 @@ public class GroceryListApi implements BasicController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PushService pushService;
 
     @GetMapping(value = "/api/grocery-lists")
     public List<GroceryList> groceryLists() {
@@ -89,6 +93,8 @@ public class GroceryListApi implements BasicController {
         invitation.setGroceryList(groceryList);
         invitationRepository.save(invitation);
         result.put("result", "success");
+
+        pushService.sendInvitationPush(receiver.getId(), currentUser.getId());
 
         return result;
     }

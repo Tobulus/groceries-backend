@@ -3,6 +3,7 @@ version '1.0.3'
 
 buildscript {
     repositories {
+        google()
         mavenCentral()
         maven {
             url "https://plugins.gradle.org/m2/"
@@ -11,6 +12,7 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.6.RELEASE")
         classpath('com.palantir.gradle.docker:gradle-docker:0.25.0')
+        classpath 'com.google.gms:google-services:4.3.3'
     }
 }
 
@@ -20,6 +22,7 @@ apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.palantir.docker'
+apply plugin: 'com.google.gms.google-services'
 
 bootJar {
     archiveBaseName = 'remembrall'
@@ -33,6 +36,12 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+allprojects {
+    repositories {
+        google()
+    }
+}
+
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile("org.springframework.boot:spring-boot-starter-security")
@@ -42,6 +51,7 @@ dependencies {
     compile('org.mariadb.jdbc:mariadb-java-client:2.6.0')
     compile('org.thymeleaf:thymeleaf-spring5')
     compile('org.thymeleaf.extras:thymeleaf-extras-springsecurity5')
+    compile('com.google.firebase:firebase-admin:6.8.1')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
