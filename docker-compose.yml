@@ -2,11 +2,12 @@ version: '3.3'
 
 services:
   remembrall:
-    image: remembrall:1.0-SNAPSHOT
+    image: remembrall:1.0.5
     ports:
       - "8080:8080"
     depends_on:
       - maria-db
+      - redis
 
   maria-db:
     image: mariadb:10.4.8
@@ -19,6 +20,11 @@ services:
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - maria-db-storage:/var/lib/mysql
+
+  redis:
+    image: redis:6.0.5
+    ports:
+      - "6379:6379"
 
 volumes:
   maria-db-storage:

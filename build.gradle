@@ -48,6 +48,8 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile("org.springframework.boot:spring-boot-starter-web")
     implementation 'org.springframework.session:spring-session-core'
+    implementation 'org.springframework.session:spring-session-data-redis'
+    implementation 'io.lettuce:lettuce-core:5.3.1.RELEASE'
     compile('org.mariadb.jdbc:mariadb-java-client:2.6.0')
     compile('org.thymeleaf:thymeleaf-spring5')
     compile('org.thymeleaf.extras:thymeleaf-extras-springsecurity5')
