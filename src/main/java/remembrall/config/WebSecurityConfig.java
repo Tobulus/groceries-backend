@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
-import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import remembrall.service.UserDetailsManager;
 
@@ -23,7 +22,6 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    @EnableRedisHttpSession
     @Configuration
     @Order(1)
     public static class ApiConfig extends WebSecurityConfigurerAdapter {
@@ -48,7 +46,6 @@ public class WebSecurityConfig {
 
     }
 
-    @EnableRedisHttpSession
     @Configuration
     @Order(2)
     public static class WebConfig extends WebSecurityConfigurerAdapter {
