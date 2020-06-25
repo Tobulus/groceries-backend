@@ -6,12 +6,12 @@ buildscript {
         google()
         mavenCentral()
         maven {
-            url "https://plugins.gradle.org/m2/"
+            url 'https://plugins.gradle.org/m2/'
         }
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.6.RELEASE")
-        classpath('com.palantir.gradle.docker:gradle-docker:0.25.0')
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.6.RELEASE'
+        classpath 'com.palantir.gradle.docker:gradle-docker:0.25.0'
         classpath 'com.google.gms:google-services:4.3.3'
     }
 }
@@ -68,4 +68,3 @@ docker {
     copySpec.from(tasks.unpack.outputs).into("dependency")
     buildArgs(['DEPENDENCY': "dependency"])
 }
-
