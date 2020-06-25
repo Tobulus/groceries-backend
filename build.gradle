@@ -1,5 +1,5 @@
 group 'remembrall'
-version '1.2.0'
+version '1.2.3'
 
 buildscript {
     repositories {
@@ -43,18 +43,18 @@ allprojects {
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
-    compile("org.springframework.boot:spring-boot-starter-security")
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile("org.springframework.boot:spring-boot-starter-web")
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.session:spring-session-core'
     implementation 'org.springframework.session:spring-session-data-redis'
     implementation 'io.lettuce:lettuce-core:5.3.1.RELEASE'
-    compile('org.mariadb.jdbc:mariadb-java-client:2.6.0')
-    compile('org.thymeleaf:thymeleaf-spring5')
-    compile('org.thymeleaf.extras:thymeleaf-extras-springsecurity5')
-    compile('com.google.firebase:firebase-admin:6.8.1')
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.6.0'
+    implementation 'org.thymeleaf:thymeleaf-spring5'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+    implementation 'com.google.firebase:firebase-admin:6.8.1'
+    testCompile    'org.springframework.boot:spring-boot-starter-test'
 }
 
 task unpack(type: Copy) {
