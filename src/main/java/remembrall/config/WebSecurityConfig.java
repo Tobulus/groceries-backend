@@ -35,13 +35,15 @@ public class WebSecurityConfig {
         protected void configure(HttpSecurity http) throws Exception {
             http.antMatcher("/api/**")
                 .authorizeRequests()
-                .antMatchers("/api/user/registration").permitAll()
+                .antMatchers("/api/user/registration", "/api/user/reset-passwd").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()
                 .and()
                 .csrf()
-                .disable();
+                .disable()
+                .logout()
+                .logoutUrl("/api/logout");
         }
 
     }

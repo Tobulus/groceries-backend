@@ -19,7 +19,7 @@ import java.util.Map;
 public class AuthenticationApi implements BasicController {
 
     @Autowired
-    private UserService service;
+    private UserService users;
 
     @Autowired
     private UserRepository userRepository;
@@ -33,7 +33,7 @@ public class AuthenticationApi implements BasicController {
 
     @PostMapping(value = "/api/user/registration")
     public void registerUserAccount(@Valid UserDto accountDto) throws EmailExistsException {
-        service.createUser(accountDto);
+        users.createUser(accountDto);
     }
 
     @PutMapping(value = "/api/user/token")
@@ -43,5 +43,10 @@ public class AuthenticationApi implements BasicController {
                 () -> new InvalidParameterException("Cannot find user with Id: " + principal.getUserId()));
         user.setToken(token);
         userRepository.save(user);
+    }
+
+    @PutMapping(value = "/api/user/reset-passwd")
+    public void resetPassword(@RequestParam String username) {
+        users.resetPasswd(username);
     }
 }
