@@ -45,8 +45,14 @@ public class AuthenticationApi implements BasicController {
         userRepository.save(user);
     }
 
-    @PutMapping(value = "/api/user/reset-passwd")
+    @PutMapping(value = "/api/user/reset-password")
     public void resetPassword(@RequestParam String username) {
-        users.resetPasswd(username);
+        users.resetPassword(username);
+    }
+
+    @PutMapping(value = "/api/user/change-password")
+    public void changePassword(@RequestParam String oldPassword, @RequestParam String newPassword) {
+        UserPrincipal principal = getUserPrincipalOrThrow();
+        users.changePassword(principal.getUsername(), oldPassword, newPassword);
     }
 }

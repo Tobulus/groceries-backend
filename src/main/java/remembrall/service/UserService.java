@@ -59,7 +59,15 @@ public class UserService {
         return user;
     }
 
-    public void resetPasswd(String username) {
+    public void changePassword(String username, String oldPassword, String newPassword) {
+        if (!userDetailsManager.userExists(username)) {
+            throw new InvalidParameterException("There is no account with that email address:" + username);
+        }
+
+        userDetailsManager.changePassword(oldPassword, crypt.encode(newPassword));
+    }
+
+    public void resetPassword(String username) {
         if (!userDetailsManager.userExists(username)) {
             throw new InvalidParameterException("There is no account with that email address:" + username);
         }
