@@ -2,7 +2,11 @@ package remembrall.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import remembrall.model.enums.quantity_unit.QuantityUnit;
+import remembrall.model.enums.quantity_unit.QuantityUnitConverter;
+import remembrall.model.enums.quantity_unit.QuantityUnitSerializer;
 
 import javax.persistence.*;
 
@@ -10,19 +14,24 @@ import javax.persistence.*;
 @Entity
 @Table(name = "grocerylistentries")
 public class GroceryListEntry extends IdEntity {
-    // TODO: basic constraints: length, empty, ...
 
     @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "grocerylist_id")
     private GroceryList groceryList;
 
-    @Column(unique = false, nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    private Double quantity;
+    @Column(nullable = false)
+    private Double quantity = 1d;
 
-    @Column(unique = false, nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Convert(converter = QuantityUnitConverter.class)
+    @JsonSerialize(using = QuantityUnitSerializer.class)
+    private QuantityUnit quantityUnit = QuantityUnit.PIECE;
+
+    @Column(nullable = false)
     private Boolean checked = false;
 
     @JsonBackReference
@@ -55,5 +64,21 @@ public class GroceryListEntry extends IdEntity {
 
     public Audit getAudit() {
         return audit;
+    }
+
+    public Double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Double quantity) {
+        this.quantity = quantity;
+    }
+
+    public QuantityUnit getQuantityUnit() {
+        return quantityUnit;
+    }
+
+    public void setQuantityUnit(QuantityUnit quantityUnit) {
+        this.quantityUnit = quantityUnit;
     }
 }
