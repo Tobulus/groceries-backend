@@ -1,4 +1,4 @@
-package remembrall.config;
+package remembrall.config.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

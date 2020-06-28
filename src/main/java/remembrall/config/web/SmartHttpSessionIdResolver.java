@@ -1,4 +1,4 @@
-package remembrall.config;
+package remembrall.config.web;
 
 import org.springframework.session.web.http.CookieHttpSessionIdResolver;
 import org.springframework.session.web.http.HeaderHttpSessionIdResolver;

@@ -1,4 +1,4 @@
-package remembrall.config;
+package remembrall.config.audit;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;

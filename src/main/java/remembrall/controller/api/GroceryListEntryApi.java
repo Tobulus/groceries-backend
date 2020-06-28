@@ -1,7 +1,6 @@
 package remembrall.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import remembrall.controller.BasicController;
 import remembrall.model.GroceryList;
@@ -11,7 +10,6 @@ import remembrall.model.repository.GroceryListEntryRepository;
 import remembrall.model.repository.GroceryListRepository;
 import remembrall.model.repository.UserRepository;
 
-import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +28,7 @@ public class GroceryListEntryApi implements BasicController {
     private UserRepository userRepository;
 
     @GetMapping(value = "/api/grocery-list/{id}/entries")
-    public List<GroceryListEntry> listGroceryListEntries(@PathVariable Long id, Model model) {
+    public List<GroceryListEntry> listGroceryListEntries(@PathVariable Long id) {
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
         GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
@@ -39,7 +37,7 @@ public class GroceryListEntryApi implements BasicController {
 
     @PostMapping(value = "/api/grocery-list/{id}/entry/new")
     public Map<String, String> newGroceryListEntry(@RequestParam("name") String name,
-                                                   @PathVariable Long id) throws IOException {
+                                                   @PathVariable Long id) {
         Map<String, String> response = new HashMap<>();
 
         GroceryListEntry groceryListEntry = new GroceryListEntry();
