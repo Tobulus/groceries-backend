@@ -9,6 +9,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+/**
+ * Configures mail support. Uses 'spring.mail.host' and 'spring.mail.port' from properties file for
+ * host and port information.
+ * <p></p>
+ * Expect to read the credentials for mailing from a file '/data/mail/mail.conf'.
+ */
 @Configuration
 @PropertySource(value = "file:/data/mail/mail.conf", ignoreResourceNotFound = true)
 public class MailConfig {

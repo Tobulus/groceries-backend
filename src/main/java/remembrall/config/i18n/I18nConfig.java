@@ -11,7 +11,11 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.Locale;
 
+/**
+ * Configures i18n support.
+ */
 @Configuration
+// TODO: ??
 @ComponentScan("org.springframework.security.samples.mvc")
 public class I18nConfig implements WebMvcConfigurer {
 

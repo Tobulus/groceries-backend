@@ -8,9 +8,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+/**
+ * Reads session information dependent on which mechanism the client is using.
+ * <p></p>
+ * This can be either cookies are via a {@link #HEADER_X_AUTH_TOKEN} header.
+ */
 public class SmartHttpSessionIdResolver implements HttpSessionIdResolver {
 
     private static final String HEADER_X_AUTH_TOKEN = "X-Auth-Token";
+
     private static final CookieHttpSessionIdResolver cookie = new CookieHttpSessionIdResolver();
     private static final HeaderHttpSessionIdResolver xauth = HeaderHttpSessionIdResolver.xAuthToken();
 
