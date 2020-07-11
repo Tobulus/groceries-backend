@@ -6,6 +6,7 @@ import remembrall.controller.BasicController;
 import remembrall.model.GroceryList;
 import remembrall.model.GroceryListEntry;
 import remembrall.model.User;
+import remembrall.model.enums.quantity_unit.QuantityUnit;
 import remembrall.model.repository.GroceryListEntryRepository;
 import remembrall.model.repository.GroceryListRepository;
 import remembrall.model.repository.UserRepository;
@@ -37,12 +38,16 @@ public class GroceryListEntryApi implements BasicController {
 
     @PostMapping(value = "/api/grocery-list/{id}/entry/new")
     public Map<String, String> newGroceryListEntry(@RequestParam("name") String name,
+                                                   @RequestParam("quantity") Double quantity,
+                                                   @RequestParam("quantityUnit") String quantityUnitCode,
                                                    @PathVariable Long id) {
         Map<String, String> response = new HashMap<>();
 
         GroceryListEntry groceryListEntry = new GroceryListEntry();
         groceryListEntry.setGroceryList(groceryListRepository.getOne(id));
         groceryListEntry.setName(name);
+        groceryListEntry.setQuantity(quantity);
+        groceryListEntry.setQuantityUnit(QuantityUnit.from(quantityUnitCode));
 
         groceryListEntryRepository.save(groceryListEntry);
 
@@ -54,6 +59,8 @@ public class GroceryListEntryApi implements BasicController {
     @PostMapping(value = "/api/grocery-list/{listId}/entry/{entryId}")
     public void editGroceryListEntry(@RequestParam(value = "name", required = false) String name,
                                      @RequestParam(value = "checked", required = false) Boolean checked,
+                                     @RequestParam(value = "quantity", required = false) Double quantity,
+                                     @RequestParam(value = "quantityUnit", required = false) String quantityUnitCode,
                                      @PathVariable Long listId,
                                      @PathVariable Long entryId) {
         GroceryListEntry groceryListEntry = fetchGroceryListEntry(listId, entryId);
@@ -64,6 +71,14 @@ public class GroceryListEntryApi implements BasicController {
 
         if (checked != null) {
             groceryListEntry.setChecked(checked);
+        }
+
+        if (quantity != null) {
+            groceryListEntry.setQuantity(quantity);
+        }
+
+        if (quantityUnitCode != null) {
+            groceryListEntry.setQuantityUnit(QuantityUnit.from(quantityUnitCode));
         }
 
         groceryListEntryRepository.save(groceryListEntry);

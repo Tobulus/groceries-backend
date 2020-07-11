@@ -20,6 +20,6 @@ public class QuantityUnitSerializer extends JsonSerializer<QuantityUnit> {
 
     @Override
     public void serialize(QuantityUnit value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        gen.writeObject(i18n.getMessage("QuantityUnit." + value.getCode()));
+        gen.writeObject(value.getCode());
     }
 }
