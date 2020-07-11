@@ -26,7 +26,6 @@ public class GroceryListEntry extends IdEntity {
     @Column(nullable = false)
     private Double quantity = 1d;
 
-    @Enumerated(EnumType.STRING)
     @Convert(converter = QuantityUnitConverter.class)
     @JsonSerialize(using = QuantityUnitSerializer.class)
     private QuantityUnit quantityUnit = QuantityUnit.PIECE;
