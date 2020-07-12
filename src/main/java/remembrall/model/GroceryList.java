@@ -13,7 +13,8 @@ import java.util.Set;
 @SqlResultSetMapping(name = "groceryListWithEntriesInfo",
         entities = @EntityResult(entityClass = GroceryList.class),
         columns = {@ColumnResult(name = "numberOfEntries"),
-                @ColumnResult(name = "numberOfCheckedEntries")})
+                @ColumnResult(name = "numberOfCheckedEntries"),
+                @ColumnResult(name = "participants")})
 @NamedEntityGraph(name = "GroceryList.Users", attributeNodes = @NamedAttributeNode(value = "users"))
 @EntityListeners(AuditingEntityListener.class)
 @Entity
@@ -53,6 +54,9 @@ public class GroceryList extends IdEntity {
 
     @Transient
     private Long numberOfCheckedEntries;
+
+    @Transient
+    private String participants;
 
     public String getName() {
         return name;
@@ -108,5 +112,13 @@ public class GroceryList extends IdEntity {
 
     public void setArchived(boolean archived) {
         this.archived = archived;
+    }
+
+    public String getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(String participants) {
+        this.participants = participants;
     }
 }

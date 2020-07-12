@@ -39,7 +39,18 @@ public class CustomGroceryListRepositoryImpl implements CustomGroceryListReposit
         int archivedInt = archived ? 1 : 0;
         Query
                 query = em.createNativeQuery(
-                "SELECT gl.id, gl.name, gl.archived, gl.created_by as created_by, gl.created_date as created_date, gl.modified_by as modified_by, gl.modified_date as modified_date, count(gle.grocerylist_id) as numberOfEntries, count(case when gle.checked then 1 end) as numberOfCheckedEntries " +
+                "SELECT gl.id, gl.name, gl.archived, gl.created_by as created_by, gl.created_date as created_date, gl.modified_by as modified_by, gl.modified_date as modified_date, " +
+                "COUNT(gle.grocerylist_id) as numberOfEntries, COUNT(case when gle.checked then 1 end) as numberOfCheckedEntries, " +
+                "(SELECT GROUP_CONCAT(firstname SEPARATOR ', ') " +
+                "FROM " +
+                "(SELECT distinct id, firstname " +
+                "FROM users " +
+                "INNER JOIN users_grocerylists " +
+                "WHERE users_grocerylists.grocerylists_id " +
+                "IN " +
+                "(SELECT users_grocerylists.grocerylists_id as id " +
+                "FROM users_grocerylists " +
+                "WHERE users_grocerylists.users_id = :user)) lists_of_user) as participants " +
                 "FROM grocerylists gl " +
                 "LEFT JOIN grocerylistentries gle ON gl.id = gle.grocerylist_id " +
                 "INNER JOIN users_grocerylists glu ON gl.id = glu.grocerylists_id " +
@@ -52,6 +63,7 @@ public class CustomGroceryListRepositoryImpl implements CustomGroceryListReposit
             GroceryList list = (GroceryList) row[0];
             list.setNumberOfEntries(((BigInteger) row[1]).longValue());
             list.setNumberOfCheckedEntries(((BigInteger) row[2]).longValue());
+            list.setParticipants(((String) row[3]));
             result.add(list);
         }
 
