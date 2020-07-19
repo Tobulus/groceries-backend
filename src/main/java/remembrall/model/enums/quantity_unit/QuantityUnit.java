@@ -3,7 +3,7 @@ package remembrall.model.enums.quantity_unit;
 import java.util.Arrays;
 
 public enum QuantityUnit {
-    PIECE("P"), LITER("L"), MILLILITER("ML"), GRAM("G"), KILOGRAM("KG");
+    UNDEFINED("UD"), PIECE("P"), LITER("L"), MILLILITER("ML"), GRAM("G"), KILOGRAM("KG");
 
     private final String code;
 
