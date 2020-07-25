@@ -1,9 +1,10 @@
 package remembrall.model.enums.quantity_unit;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public enum QuantityUnit {
-    UNDEFINED("UD"), PIECE("P"), LITER("L"), MILLILITER("ML"), GRAM("G"), KILOGRAM("KG");
+    UNDEFINED(null), PIECE("P"), LITER("L"), MILLILITER("ML"), GRAM("G"), KILOGRAM("KG");
 
     private final String code;
 
@@ -16,7 +17,7 @@ public enum QuantityUnit {
     }
 
     public static QuantityUnit from(String code) {
-        return Arrays.stream(values()).filter(quantityUnit -> quantityUnit.code.equals(code)).findFirst()
-                     .orElseThrow(IllegalArgumentException::new);
+        return Arrays.stream(values()).filter(quantityUnit -> Objects.equals(quantityUnit.code, code)).findFirst()
+                     .orElse(UNDEFINED);
     }
 }

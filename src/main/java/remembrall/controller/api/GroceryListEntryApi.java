@@ -38,8 +38,8 @@ public class GroceryListEntryApi implements BasicController {
 
     @PostMapping(value = "/api/grocery-list/{id}/entry/new")
     public Map<String, String> newGroceryListEntry(@RequestParam("name") String name,
-                                                   @RequestParam("quantity") Double quantity,
-                                                   @RequestParam("quantityUnit") String quantityUnitCode,
+                                                   @RequestParam(value = "quantity", required = false) Double quantity,
+                                                   @RequestParam(value = "quantityUnit", required = false) String quantityUnitCode,
                                                    @PathVariable Long id) {
         Map<String, String> response = new HashMap<>();
 
@@ -73,13 +73,8 @@ public class GroceryListEntryApi implements BasicController {
             groceryListEntry.setChecked(checked);
         }
 
-        if (quantity != null) {
-            groceryListEntry.setQuantity(quantity);
-        }
-
-        if (quantityUnitCode != null) {
-            groceryListEntry.setQuantityUnit(QuantityUnit.from(quantityUnitCode));
-        }
+        groceryListEntry.setQuantity(quantity);
+        groceryListEntry.setQuantityUnit(QuantityUnit.from(quantityUnitCode));
 
         groceryListEntryRepository.save(groceryListEntry);
     }

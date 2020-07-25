@@ -23,12 +23,12 @@ public class GroceryListEntry extends IdEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private Double quantity = 1d;
+    @Column
+    private Double quantity;
 
     @Convert(converter = QuantityUnitConverter.class)
     @JsonSerialize(using = QuantityUnitSerializer.class)
-    private QuantityUnit quantityUnit = QuantityUnit.PIECE;
+    private QuantityUnit quantityUnit = QuantityUnit.UNDEFINED;
 
     @Column(nullable = false)
     private Boolean checked = false;
