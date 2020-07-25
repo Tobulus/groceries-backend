@@ -1,8 +1,9 @@
 package remembrall.service;
 
+import com.google.firebase.messaging.AndroidConfig;
+import com.google.firebase.messaging.AndroidNotification;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import remembrall.model.User;
@@ -23,10 +24,13 @@ public class PushService {
         if (receiver.getToken() != null && !receiver.getToken().isEmpty()) {
             User sender = userRepository.findById(senderId).orElseThrow(
                     () -> new InvalidParameterException("Cannot find user with id: " + senderId));
-            Message message = Message.builder().setToken(receiver.getToken()).setNotification(
-                    new Notification("New Invitation",
-                                     String.format("%s %s invites you to a list.", sender.getFirstname(),
-                                                   sender.getLastname()))).build();
+            Message message = Message.builder().setToken(receiver.getToken())
+                                     .setAndroidConfig(AndroidConfig.builder().setNotification(
+                                             AndroidNotification.builder().setClickAction("OPEN_INVITATIONS")
+                                                                .setTitle("New Invitation").setBody(
+                                                     String.format("%s %s invites you to a list.",
+                                                                   sender.getFirstname(),
+                                                                   sender.getLastname())).build()).build()).build();
 
             FirebaseMessaging.getInstance().sendAsync(message);
         }
