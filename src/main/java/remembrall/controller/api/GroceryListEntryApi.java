@@ -1,10 +1,12 @@
 package remembrall.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import remembrall.controller.BasicController;
 import remembrall.model.GroceryList;
 import remembrall.model.GroceryListEntry;
+import remembrall.model.RedisKeys;
 import remembrall.model.User;
 import remembrall.model.enums.quantity_unit.QuantityUnit;
 import remembrall.model.repository.GroceryListEntryRepository;
@@ -28,12 +30,20 @@ public class GroceryListEntryApi implements BasicController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private StringRedisTemplate redis;
+
     @GetMapping(value = "/api/grocery-list/{id}/entries")
     public List<GroceryListEntry> listGroceryListEntries(@PathVariable Long id) {
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
         GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
-        return groceryListEntryRepository.findByGroceryList(groceryList);
+        List<GroceryListEntry> lists = groceryListEntryRepository.findByGroceryList(groceryList);
+
+        // remove all queued pushes for the current grocerylist
+        redis.opsForZSet().remove(RedisKeys.PUSH_NEW_ENTRY, String.format("%s-%s", id, currentUser.getId()));
+
+        return lists;
     }
 
     @PostMapping(value = "/api/grocery-list/{id}/entry/new")
@@ -50,6 +60,10 @@ public class GroceryListEntryApi implements BasicController {
         groceryListEntry.setQuantityUnit(QuantityUnit.from(quantityUnitCode));
 
         groceryListEntryRepository.save(groceryListEntry);
+
+        userRepository.findByGroceryLists(groceryListRepository.getOne(id)).forEach(
+                user -> redis.opsForZSet().add(RedisKeys.PUSH_NEW_ENTRY, String.format("%s-%s", id, user.getId()),
+                                               System.currentTimeMillis()));
 
         response.put("result", "success");
         response.put("id", groceryListEntry.getId().toString());
