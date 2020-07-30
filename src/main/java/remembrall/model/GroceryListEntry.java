@@ -37,6 +37,9 @@ public class GroceryListEntry extends IdEntity {
     @Embedded
     private final Audit audit = new Audit();
 
+    @Transient
+    private boolean unseen;
+
     public GroceryList getGroceryList() {
         return groceryList;
     }
@@ -79,5 +82,13 @@ public class GroceryListEntry extends IdEntity {
 
     public void setQuantityUnit(QuantityUnit quantityUnit) {
         this.quantityUnit = quantityUnit;
+    }
+
+    public boolean isUnseen() {
+        return unseen;
+    }
+
+    public void setUnseen(boolean unseen) {
+        this.unseen = unseen;
     }
 }

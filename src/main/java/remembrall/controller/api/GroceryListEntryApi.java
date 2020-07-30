@@ -1,5 +1,7 @@
 package remembrall.controller.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +19,12 @@ import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class GroceryListEntryApi implements BasicController {
+
+    Logger logger = LoggerFactory.getLogger(GroceryListEntryApi.class);
 
     @Autowired
     private GroceryListRepository groceryListRepository;
@@ -38,10 +43,18 @@ public class GroceryListEntryApi implements BasicController {
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
         GroceryList groceryList = groceryListRepository.findByIdAndUsers(id, currentUser).orElseThrow(
                 () -> new InvalidParameterException("List doesn't exist"));
+
+        String timestamp =
+                (String) redis.opsForHash().get(RedisKeys.LAST_SEEN, String.format("%s-%s", id, currentUser.getId()));
+        long lastSeen = timestamp == null ? System.currentTimeMillis() : Long.parseLong(timestamp);
         List<GroceryListEntry> lists = groceryListEntryRepository.findByGroceryList(groceryList);
+        lists.forEach(list -> list.setUnseen(list.getAudit().getCreatedDate() > lastSeen));
 
         // remove all queued pushes for the current grocerylist
         redis.opsForZSet().remove(RedisKeys.PUSH_NEW_ENTRY, String.format("%s-%s", id, currentUser.getId()));
+        // save 'last seen' timestamp
+        redis.opsForHash().put(RedisKeys.LAST_SEEN, String.format("%s-%s", id, currentUser.getId()),
+                               String.valueOf(System.currentTimeMillis()));
 
         return lists;
     }
@@ -52,6 +65,7 @@ public class GroceryListEntryApi implements BasicController {
                                                    @RequestParam(value = "quantityUnit", required = false) String quantityUnitCode,
                                                    @PathVariable Long id) {
         Map<String, String> response = new HashMap<>();
+        Long currentUser = getUserPrincipalOrThrow().getUserId();
 
         GroceryListEntry groceryListEntry = new GroceryListEntry();
         groceryListEntry.setGroceryList(groceryListRepository.getOne(id));
@@ -62,8 +76,13 @@ public class GroceryListEntryApi implements BasicController {
         groceryListEntryRepository.save(groceryListEntry);
 
         userRepository.findByGroceryLists(groceryListRepository.getOne(id)).forEach(
-                user -> redis.opsForZSet().add(RedisKeys.PUSH_NEW_ENTRY, String.format("%s-%s", id, user.getId()),
-                                               System.currentTimeMillis()));
+                user -> {
+                    if (!Objects.equals(currentUser, user.getId())) {
+                        redis.opsForZSet()
+                             .add(RedisKeys.PUSH_NEW_ENTRY, String.format("%s-%s", id, user.getId()),
+                                  System.currentTimeMillis());
+                    }
+                });
 
         response.put("result", "success");
         response.put("id", groceryListEntry.getId().toString());
