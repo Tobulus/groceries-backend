@@ -1,7 +1,5 @@
 package remembrall.controller.api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +21,6 @@ import java.util.Objects;
 
 @RestController
 public class GroceryListEntryApi implements BasicController {
-
-    Logger logger = LoggerFactory.getLogger(GroceryListEntryApi.class);
 
     @Autowired
     private GroceryListRepository groceryListRepository;
