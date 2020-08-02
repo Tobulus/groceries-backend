@@ -1,23 +1,22 @@
 package remembrall.config.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
-import org.springframework.session.data.redis.RedisOperationsSessionRepository;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import remembrall.service.UserDetailsManager;
 
 import javax.sql.DataSource;
-import java.time.Duration;
 
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 60 * 60 * 24 * 30)
 @EnableTransactionManagement
 @EnableWebSecurity
 public class WebSecurityConfig {
@@ -50,11 +49,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    @Autowired
-    public RedisOperationsSessionRepository sessionRepository(RedisTemplate<Object, Object> template,
-                                                              @Value("${server.servlet.session.timeout}") Duration sessionTimeout) {
-        RedisOperationsSessionRepository repository = new RedisOperationsSessionRepository(template);
-        repository.setDefaultMaxInactiveInterval((int) sessionTimeout.getSeconds());
-        return repository;
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
     }
 }
