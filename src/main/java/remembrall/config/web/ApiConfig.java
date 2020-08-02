@@ -15,7 +15,7 @@ import org.springframework.session.web.http.SessionRepositoryFilter;
 public class ApiConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private LogoutHandler logoutHandler;
+    private LogoutListener logoutHandler;
 
     @Autowired
     private RedisOperationsSessionRepository sessionRepository;
@@ -36,8 +36,7 @@ public class ApiConfig extends WebSecurityConfigurerAdapter {
             .csrf()
             .disable()
             .logout()
-            .logoutUrl("/api/logout")
-            .logoutSuccessHandler(logoutHandler);
+            .logoutUrl("/api/logout");
     }
 
 }

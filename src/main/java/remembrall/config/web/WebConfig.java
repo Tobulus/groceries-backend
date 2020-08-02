@@ -15,7 +15,7 @@ import org.springframework.session.web.http.SessionRepositoryFilter;
 public class WebConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private LogoutHandler logoutHandler;
+    private LogoutListener logoutHandler;
 
     @Autowired
     private RedisOperationsSessionRepository sessionRepository;
@@ -35,7 +35,6 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
             .permitAll()
             .and()
             .logout()
-            .logoutSuccessHandler(logoutHandler)
             .permitAll();
     }
 }
