@@ -13,4 +13,7 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
 
     @EntityGraph(value = "Invitation.groceryListAndUsers")
     Optional<Invitation> findByIdAndReceiverAndAcknowledgedAndDenied(Long id, User user, boolean ack, boolean denied);
+
+    @EntityGraph(value = "Invitation.receiver")
+    List<Invitation> findByCreatedTimestampSmallerThanAndPushedReminder(Long oneDayAgo, boolean pushedReminder);
 }

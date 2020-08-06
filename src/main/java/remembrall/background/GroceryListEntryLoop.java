@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class PushLoop {
+public class GroceryListEntryLoop {
 
     @Autowired
     private StringRedisTemplate redis;

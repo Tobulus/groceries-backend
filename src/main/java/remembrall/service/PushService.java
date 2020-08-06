@@ -7,6 +7,7 @@ import com.google.firebase.messaging.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import remembrall.model.GroceryList;
+import remembrall.model.Invitation;
 import remembrall.model.User;
 import remembrall.model.repository.GroceryListRepository;
 import remembrall.model.repository.UserRepository;
@@ -30,12 +31,12 @@ public class PushService {
             User sender = userRepository.findById(senderId).orElseThrow(
                     () -> new InvalidParameterException("Cannot find user with id: " + senderId));
             Message message = Message.builder().setToken(receiver.getToken())
-                                     .setAndroidConfig(AndroidConfig.builder().setNotification(
-                                             AndroidNotification.builder().setClickAction("OPEN_INVITATIONS")
-                                                                .setTitle("New Invitation").setBody(
-                                                     String.format("%s %s invites you to a list.",
-                                                                   sender.getFirstname(),
-                                                                   sender.getLastname())).build()).build()).build();
+                    .setAndroidConfig(AndroidConfig.builder().setNotification(
+                            AndroidNotification.builder().setClickAction("OPEN_INVITATIONS")
+                                    .setTitle("New Invitation").setBody(
+                                    String.format("%s %s invites you to a list.",
+                                            sender.getFirstname(),
+                                            sender.getLastname())).build()).build()).build();
 
             FirebaseMessaging.getInstance().sendAsync(message);
         }
@@ -49,11 +50,24 @@ public class PushService {
             GroceryList groceryList = groceryListRepository.findById(groceryListId).orElseThrow(
                     () -> new InvalidParameterException("Cannot find list with id: " + groceryListId));
             Message message = Message.builder().setToken(receiver.getToken())
-                                     .setAndroidConfig(AndroidConfig.builder().setNotification(
-                                             AndroidNotification.builder().setClickAction("OPEN_LIST")
-                                                                .setTitle("New Entries").setBody(
-                                                     String.format("New entries in list '%s'",
-                                                                   groceryList.getName())).build()).build()).build();
+                    .setAndroidConfig(AndroidConfig.builder().setNotification(
+                            AndroidNotification.builder().setClickAction("OPEN_LIST")
+                                    .setTitle("New Entries").setBody(
+                                    String.format("New entries in list '%s'",
+                                            groceryList.getName())).build()).build()).build();
+
+            FirebaseMessaging.getInstance().sendAsync(message);
+        }
+    }
+
+    public void remindInvitation(Invitation invitation) {
+        User receiver = invitation.getReceiver();
+
+        if (receiver.getToken() != null && !receiver.getToken().isEmpty()) {
+            Message message = Message.builder().setToken(receiver.getToken())
+                    .setAndroidConfig(AndroidConfig.builder().setNotification(
+                            AndroidNotification.builder().setClickAction("OPEN_INVITATIONS")
+                                    .setTitle("Open invitation").setBody("You still have a open invitation.").build()).build()).build();
 
             FirebaseMessaging.getInstance().sendAsync(message);
         }

@@ -6,6 +6,7 @@ import java.security.InvalidParameterException;
 @NamedEntityGraph(name = "Invitation.groceryListAndUsers",
         attributeNodes = @NamedAttributeNode(value = "groceryList", subgraph = "users"),
         subgraphs = @NamedSubgraph(name = "users", attributeNodes = @NamedAttributeNode(value = "users")))
+@NamedEntityGraph(name = "Invitation.receiver", attributeNodes = @NamedAttributeNode(value = "receiver"))
 @Entity
 @Table(name = "invitations")
 public class Invitation extends IdEntity {
@@ -25,11 +26,17 @@ public class Invitation extends IdEntity {
     @Column(nullable = false)
     private boolean denied = false;
 
+    @Column(nullable = false)
+    private boolean pushedReminder = false;
+
+    private Long createdTimestamp;
+
     @PrePersist
     public void validate() {
         if (acknowledged && denied) {
             throw new InvalidParameterException("Invitation cannot be acknowdledge and denied at the same time.");
         }
+        createdTimestamp = System.currentTimeMillis();
     }
 
     public User getSender() {
@@ -70,5 +77,17 @@ public class Invitation extends IdEntity {
 
     public void setDenied(boolean denied) {
         this.denied = denied;
+    }
+
+    public Long getCreatedTimestamp() {
+        return createdTimestamp;
+    }
+
+    public boolean isPushedReminder() {
+        return pushedReminder;
+    }
+
+    public void setPushedReminder(boolean pushedReminder) {
+        this.pushedReminder = pushedReminder;
     }
 }
