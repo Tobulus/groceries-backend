@@ -20,21 +20,6 @@ public class CustomGroceryListRepositoryImpl implements CustomGroceryListReposit
 
     @Override
     public List<GroceryList> fetchLists(User user, boolean archived) {
-        /*CriteriaBuilder cb = em.getCriteriaBuilder();
-
-        CriteriaQuery<GroceryList> query = cb.createQuery(GroceryList.class);
-        Root<GroceryList> root = query.from(GroceryList.class);
-
-        Join<GroceryList, GroceryListEntry> join = root.join("groceryListEntries", JoinType.LEFT);
-        Join<GroceryList, User> join1 = root.join("users", JoinType.LEFT);
-
-        query.select(cb.construct(GroceryList.class, root.get("id"), root.get("name"), cb.count(join)));
-        query.where(cb.equal(root.get("users"), userRepository.getOne(currentUser.getUserId())));
-        query.groupBy(root.get("id"));
-        query.groupBy(join.get("groceryList"));
-
-        em.createQuery(query).getResultList();*/
-
         List<GroceryList> result = new ArrayList<>();
         int archivedInt = archived ? 1 : 0;
         Query

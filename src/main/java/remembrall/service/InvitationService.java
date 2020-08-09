@@ -27,28 +27,24 @@ public class InvitationService {
     @Transactional
     public void ackknowledge(User currentUser, Long id) {
         Invitation invitation =
-                invitationRepository.findByIdAndReceiverAndAcknowledgedAndDenied(id, currentUser, false, false)
+                invitationRepository.findByIdAndReceiver(id, currentUser)
                                     .orElseThrow(
                                             () -> new InvalidParameterException("Invitation doesn't exist."));
 
-        invitation.setAcknowledged(true);
-        invitation = invitationRepository.save(invitation);
-
-        // TODO: can this be done without the additional fetching?
         Long listId = invitation.getGroceryList().getId();
         GroceryList list = groceryListRepository.findEagerUsersById(listId).orElseThrow(
                 () -> new InvalidParameterException("Can't find grocerylist with id " + listId));
         list.getUsers().add(currentUser);
         groceryListRepository.save(list);
+
+        invitationRepository.delete(invitation);
     }
 
 
     public void deny(User currentUser, Long id) {
-        Invitation invitation =
-                invitationRepository.findByIdAndReceiverAndAcknowledgedAndDenied(id, currentUser, false, false)
-                                    .orElseThrow(
-                                            () -> new InvalidParameterException("Invitation doesn't exist."));
-        invitation.setDenied(true);
-        invitationRepository.save(invitation);
+        if (invitationRepository.deleteByIdAndReceiver(id, currentUser) < 1) {
+            throw new InvalidParameterException(
+                    String.format("There exists no invitation with id %s for receiver %s", id, currentUser.getId()));
+        }
     }
 }
