@@ -6,6 +6,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import remembrall.model.User;
 import remembrall.model.UserDto;
 import remembrall.model.repository.UserRepository;
@@ -33,6 +34,7 @@ public class UserService {
     @Autowired
     private JavaMailSender mail;
 
+    @Transactional
     public void createUser(UserDto userDto)
             throws EmailExistsException {
 
@@ -46,11 +48,13 @@ public class UserService {
         dummy.setFirstname(userDto.getFirstname());
         dummy.setUsername(userDto.getUsername());
         dummy.setPassword(crypt.encode(userDto.getPassword()));
+        dummy.setEnabled(true);
         UserPrincipal userDetails = new UserPrincipal(dummy);
 
         userDetailsManager.createUser(userDetails);
     }
 
+    @Transactional
     public void changePassword(String username, String oldPassword, String newPassword) {
         if (!userDetailsManager.userExists(username)) {
             throw new InvalidParameterException("There is no account with that email address:" + username);
@@ -59,6 +63,7 @@ public class UserService {
         userDetailsManager.changePassword(oldPassword, crypt.encode(newPassword));
     }
 
+    @Transactional
     public void resetPassword(String username) {
         if (!userDetailsManager.userExists(username)) {
             throw new InvalidParameterException("There is no account with that email address:" + username);
@@ -68,6 +73,7 @@ public class UserService {
         User dummy = new User();
         dummy.setUsername(username);
         dummy.setPassword(crypt.encode(passwd));
+        dummy.setEnabled(true);
         UserPrincipal userDetails = new UserPrincipal(dummy);
         userDetailsManager.updateUser(userDetails);
 
