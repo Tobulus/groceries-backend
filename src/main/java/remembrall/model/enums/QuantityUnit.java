@@ -1,4 +1,4 @@
-package remembrall.model.enums.quantity_unit;
+package remembrall.model.enums;
 
 import java.util.Arrays;
 import java.util.Objects;

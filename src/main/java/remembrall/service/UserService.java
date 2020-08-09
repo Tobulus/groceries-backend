@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import remembrall.config.user.UserPrincipal;
 import remembrall.model.User;
 import remembrall.model.UserDto;
 import remembrall.model.repository.UserRepository;

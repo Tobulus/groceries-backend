@@ -2,12 +2,12 @@ package remembrall.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import remembrall.config.user.UserPrincipal;
 import remembrall.controller.BasicController;
 import remembrall.model.User;
 import remembrall.model.UserDto;
 import remembrall.model.repository.UserRepository;
 import remembrall.model.validation.EmailExistsException;
-import remembrall.service.UserPrincipal;
 import remembrall.service.UserService;
 
 import javax.validation.Valid;

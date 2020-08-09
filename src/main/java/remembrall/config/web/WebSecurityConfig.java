@@ -12,7 +12,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import remembrall.service.UserManager;
+import remembrall.config.user.UserManager;
 
 import javax.sql.DataSource;
 

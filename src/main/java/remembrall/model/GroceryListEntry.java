@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import remembrall.model.enums.quantity_unit.QuantityUnit;
-import remembrall.model.enums.quantity_unit.QuantityUnitConverter;
-import remembrall.model.enums.quantity_unit.QuantityUnitSerializer;
+import remembrall.model.enums.QuantityUnit;
+import remembrall.model.enums.QuantityUnitConverter;
+import remembrall.model.enums.QuantityUnitSerializer;
 
 import javax.persistence.*;
 

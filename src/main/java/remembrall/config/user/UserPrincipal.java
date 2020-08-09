@@ -1,4 +1,4 @@
-package remembrall.service;
+package remembrall.config.user;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

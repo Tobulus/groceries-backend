@@ -2,6 +2,7 @@ package remembrall.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import remembrall.config.user.UserPrincipal;
 import remembrall.controller.BasicController;
 import remembrall.model.GroceryList;
 import remembrall.model.Invitation;
@@ -11,7 +12,6 @@ import remembrall.model.repository.GroceryListRepository;
 import remembrall.model.repository.InvitationRepository;
 import remembrall.model.repository.UserRepository;
 import remembrall.service.PushService;
-import remembrall.service.UserPrincipal;
 
 import java.security.InvalidParameterException;
 import java.util.HashMap;

@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.session.SessionDestroyedEvent;
 import org.springframework.stereotype.Component;
+import remembrall.config.user.UserPrincipal;
 import remembrall.model.repository.UserRepository;
-import remembrall.service.UserPrincipal;
 
 @Component
 public class LogoutListener implements ApplicationListener<SessionDestroyedEvent> {

@@ -8,7 +8,7 @@ import remembrall.model.GroceryList;
 import remembrall.model.GroceryListEntry;
 import remembrall.model.RedisKeys;
 import remembrall.model.User;
-import remembrall.model.enums.quantity_unit.QuantityUnit;
+import remembrall.model.enums.QuantityUnit;
 import remembrall.model.repository.GroceryListEntryRepository;
 import remembrall.model.repository.GroceryListRepository;
 import remembrall.model.repository.UserRepository;

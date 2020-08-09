@@ -3,7 +3,7 @@ package remembrall.config.audit;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import remembrall.service.UserPrincipal;
+import remembrall.config.user.UserPrincipal;
 
 import java.util.Optional;
 

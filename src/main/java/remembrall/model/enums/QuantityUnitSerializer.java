@@ -1,4 +1,4 @@
-package remembrall.model.enums.quantity_unit;
+package remembrall.model.enums;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

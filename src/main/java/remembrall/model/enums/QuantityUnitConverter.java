@@ -1,4 +1,4 @@
-package remembrall.model.enums.quantity_unit;
+package remembrall.model.enums;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
