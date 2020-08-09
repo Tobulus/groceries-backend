@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InvitationRepository extends JpaRepository<Invitation, Long> {
-    List<Invitation> findByReceiverAndAcknowledgedAndDenied(User receiver, boolean ack, boolean denied);
+    List<Invitation> findByReceiver(User receiver);
 
     @EntityGraph(value = "Invitation.groceryListAndUsers")
-    Optional<Invitation> findByIdAndReceiverAndAcknowledgedAndDenied(Long id, User user, boolean ack, boolean denied);
+    Optional<Invitation> findByIdAndReceiver(Long id, User user);
+
+    Long deleteByIdAndReceiver(Long id, User receiver);
 }

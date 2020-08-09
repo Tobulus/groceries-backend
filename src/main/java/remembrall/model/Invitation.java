@@ -1,7 +1,6 @@
 package remembrall.model;
 
 import javax.persistence.*;
-import java.security.InvalidParameterException;
 
 @NamedEntityGraph(name = "Invitation.groceryListAndUsers",
         attributeNodes = @NamedAttributeNode(value = "groceryList", subgraph = "users"),
@@ -19,19 +18,6 @@ public class Invitation extends IdEntity {
     @ManyToOne(optional = false)
     private User receiver;
 
-    @Column(nullable = false)
-    private boolean acknowledged = false;
-
-    @Column(nullable = false)
-    private boolean denied = false;
-
-    @PrePersist
-    public void validate() {
-        if (acknowledged && denied) {
-            throw new InvalidParameterException("Invitation cannot be acknowdledge and denied at the same time.");
-        }
-    }
-
     public User getSender() {
         return sender;
     }
@@ -48,27 +34,11 @@ public class Invitation extends IdEntity {
         this.receiver = receiver;
     }
 
-    public boolean isAcknowledged() {
-        return acknowledged;
-    }
-
-    public void setAcknowledged(boolean acknowledged) {
-        this.acknowledged = acknowledged;
-    }
-
     public GroceryList getGroceryList() {
         return groceryList;
     }
 
     public void setGroceryList(GroceryList groceryList) {
         this.groceryList = groceryList;
-    }
-
-    public boolean isDenied() {
-        return denied;
-    }
-
-    public void setDenied(boolean denied) {
-        this.denied = denied;
     }
 }

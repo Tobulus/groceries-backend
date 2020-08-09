@@ -23,6 +23,8 @@ import java.util.Properties;
 @PropertySource(value = "file:/data/mail/mail.conf", ignoreResourceNotFound = true)
 public class MailConfig {
 
+    private static final String IDE_PROFILE = "ide";
+
     Logger logger = LoggerFactory.getLogger(MailConfig.class);
 
     @Autowired
@@ -31,7 +33,7 @@ public class MailConfig {
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        boolean runningIde = Arrays.asList(env.getActiveProfiles()).contains("ide");
+        boolean runningIde = Arrays.asList(env.getActiveProfiles()).contains(IDE_PROFILE);
 
         String user = env.getProperty("mail.user");
         String host = env.getProperty("mail.host");

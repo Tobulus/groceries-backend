@@ -29,7 +29,7 @@ public class InvitationApi implements BasicController {
     @GetMapping(value = "/api/invitations")
     public List<Invitation> invitations() {
         User currentUser = userRepository.getOne(getUserPrincipalOrThrow().getUserId());
-        return invitationRepository.findByReceiverAndAcknowledgedAndDenied(currentUser, false, false);
+        return invitationRepository.findByReceiver(currentUser);
     }
 
     @PostMapping(value = "/api/invitation/{id}")
