@@ -3,19 +3,16 @@ package remembrall.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
+import remembrall.model.User;
 import remembrall.model.UserDto;
 import remembrall.model.repository.UserRepository;
 import remembrall.model.validation.EmailExistsException;
 
-import javax.transaction.Transactional;
 import java.security.InvalidParameterException;
 import java.security.SecureRandom;
-import java.util.Collections;
 
 @Service
 public class UserService {
@@ -25,7 +22,7 @@ public class UserService {
                     'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'z'};
 
     @Autowired
-    private JdbcUserDetailsManager userDetailsManager;
+    private UserDetailsManager userDetailsManager;
 
     @Autowired
     private BCryptPasswordEncoder crypt;
@@ -36,27 +33,22 @@ public class UserService {
     @Autowired
     private JavaMailSender mail;
 
-    @Transactional
-    public User createUser(UserDto userDto)
+    public void createUser(UserDto userDto)
             throws EmailExistsException {
 
         if (userDetailsManager.userExists(userDto.getUsername())) {
-            throw new EmailExistsException("There is an account with that email address:" + userDto.getUsername());
+            throw new EmailExistsException(
+                    "There is already an account with that email address:" + userDto.getUsername());
         }
 
-        // create basic user
-        User user = new User(userDto.getUsername(), crypt.encode(userDto.getPassword()),
-                             Collections.singletonList(new SimpleGrantedAuthority("USER")));
-        userDetailsManager.createUser(user);
+        User dummy = new User();
+        dummy.setLastname(userDto.getLastname());
+        dummy.setFirstname(userDto.getFirstname());
+        dummy.setUsername(userDto.getUsername());
+        dummy.setPassword(crypt.encode(userDto.getPassword()));
+        UserPrincipal userDetails = new UserPrincipal(dummy);
 
-        // update additional fields
-        remembrall.model.User entity = userRepository.findByUsername(user.getUsername()).orElseThrow(
-                () -> new InvalidParameterException("Cannot find previously saved user object: " + user.getUsername()));
-        entity.setFirstname(userDto.getFirstname());
-        entity.setLastname(userDto.getLastname());
-        userRepository.save(entity);
-
-        return user;
+        userDetailsManager.createUser(userDetails);
     }
 
     public void changePassword(String username, String oldPassword, String newPassword) {
@@ -73,9 +65,11 @@ public class UserService {
         }
 
         String passwd = generatePassword(8);
-        User user =
-                new User(username, crypt.encode(passwd), Collections.singletonList(new SimpleGrantedAuthority("USER")));
-        userDetailsManager.updateUser(user);
+        User dummy = new User();
+        dummy.setUsername(username);
+        dummy.setPassword(crypt.encode(passwd));
+        UserPrincipal userDetails = new UserPrincipal(dummy);
+        userDetailsManager.updateUser(userDetails);
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("no-reply@remembrall.de");

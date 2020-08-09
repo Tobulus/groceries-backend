@@ -8,11 +8,11 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import remembrall.service.UserDetailsManager;
+import remembrall.service.UserManager;
 
 import javax.sql.DataSource;
 
@@ -36,11 +36,8 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public JdbcUserDetailsManager userDetailsManager() {
-        JdbcUserDetailsManager manager = new UserDetailsManager(dataSource());
-        manager.setUsersByUsernameQuery("select username,password,enabled from users where username=?");
-        manager.setAuthoritiesByUsernameQuery("select username,authority from authorities where username = ?");
-        return manager;
+    public UserDetailsManager userDetailsManager() {
+        return new UserManager();
     }
 
     @Autowired
