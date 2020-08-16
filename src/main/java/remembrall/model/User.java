@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 @Entity
@@ -26,6 +27,9 @@ public class User extends IdEntity {
     @JsonIgnore
     @Column(nullable = false)
     private String password;
+
+    @Column(length = 2)
+    private String lang;
 
     @Column(nullable = false)
     private boolean enabled;
@@ -88,5 +92,20 @@ public class User extends IdEntity {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public Locale getLocale() {
+        if (lang != null) {
+            return Locale.forLanguageTag(lang);
+        }
+        return Locale.ENGLISH;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
     }
 }

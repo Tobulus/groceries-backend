@@ -40,7 +40,7 @@ public class InvitationService {
         invitationRepository.delete(invitation);
     }
 
-
+    @Transactional
     public void deny(User currentUser, Long id) {
         if (invitationRepository.deleteByIdAndReceiver(id, currentUser) < 1) {
             throw new InvalidParameterException(

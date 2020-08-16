@@ -21,4 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
 
     Long deleteByUsername(String username);
+
+    @Modifying
+    @Query("UPDATE User SET lang = ?2 WHERE username = ?1")
+    void updateLangFor(String username, String lang);
 }

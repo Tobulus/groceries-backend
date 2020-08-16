@@ -3,6 +3,7 @@ package remembrall.controller.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import remembrall.config.user.UserPrincipal;
+import remembrall.config.web.DbLocaleResolver;
 import remembrall.controller.BasicController;
 import remembrall.model.User;
 import remembrall.model.UserDto;
@@ -10,6 +11,7 @@ import remembrall.model.repository.UserRepository;
 import remembrall.model.validation.EmailExistsException;
 import remembrall.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
@@ -24,9 +26,13 @@ public class AuthenticationApi implements BasicController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private DbLocaleResolver dbLocaleResolver;
+
     @GetMapping(value = "/api/auth")
-    public Map<String, String> auth() {
+    public Map<String, String> auth(HttpServletRequest request) {
         Map<String, String> response = new HashMap<>();
+        dbLocaleResolver.updateLang(request, getUserPrincipalOrThrow().getUsername());
         response.put("result", "success");
         return response;
     }
