@@ -1,6 +1,7 @@
 package remembrall.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.*;
 import remembrall.config.user.UserPrincipal;
 import remembrall.controller.BasicController;
@@ -88,13 +89,15 @@ public class GroceryListApi implements BasicController {
         Map<String, String> result = new HashMap<>();
 
         Invitation invitation = new Invitation();
-        invitation.setSender(currentUser);
         invitation.setReceiver(receiver);
         invitation.setGroceryList(groceryList);
-        invitationRepository.save(invitation);
-        result.put("result", "success");
 
-        pushService.sendInvitationPush(receiver.getId(), currentUser.getId());
+        if (!invitationRepository.exists(Example.of(invitation))) {
+            invitation.setSender(currentUser);
+            invitationRepository.save(invitation);
+            result.put("result", "success");
+            pushService.sendInvitationPush(receiver.getId(), currentUser.getId());
+        }
 
         return result;
     }
