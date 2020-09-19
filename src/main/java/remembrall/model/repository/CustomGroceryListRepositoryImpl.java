@@ -31,7 +31,8 @@ public class CustomGroceryListRepositoryImpl implements CustomGroceryListReposit
                 "LEFT JOIN grocerylistentries gle ON gl.id = gle.grocerylist_id " +
                 "INNER JOIN users_grocerylists glu ON gl.id = glu.grocerylists_id " +
                 "WHERE glu.users_id = :user AND gl.archived = :archived " +
-                "GROUP BY gl.id;", "groceryListWithEntriesInfo");
+                "GROUP BY gl.id " +
+                "ORDER BY gl.created_date DESC;", "groceryListWithEntriesInfo");
         query.setParameter("user", user.getId());
         query.setParameter("archived", archivedInt);
 

@@ -7,7 +7,7 @@ import remembrall.model.GroceryListEntry;
 import java.util.List;
 
 public interface GroceryListEntryRepository extends JpaRepository<GroceryListEntry, Long> {
-    List<GroceryListEntry> findByGroceryList(GroceryList groceryList);
+    List<GroceryListEntry> findByGroceryListOrderByAudit_CreatedDateDesc(GroceryList groceryList);
 
     GroceryListEntry findByGroceryListAndId(GroceryList groceryList, Long id);
 

@@ -43,7 +43,8 @@ public class GroceryListEntryApi implements BasicController {
         String timestamp =
                 (String) redis.opsForHash().get(RedisKeys.LAST_SEEN, String.format("%s-%s", id, currentUser.getId()));
         long lastSeen = timestamp == null ? System.currentTimeMillis() : Long.parseLong(timestamp);
-        List<GroceryListEntry> lists = groceryListEntryRepository.findByGroceryList(groceryList);
+        List<GroceryListEntry> lists =
+                groceryListEntryRepository.findByGroceryListOrderByAudit_CreatedDateDesc(groceryList);
         lists.forEach(list -> list.setUnseen(list.getAudit().getCreatedDate() > lastSeen));
 
         // remove all queued pushes for the current grocerylist
