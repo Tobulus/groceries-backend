@@ -1,5 +1,5 @@
 group 'remembrall'
-version '1.3.6'
+version '1.6.3'
 
 buildscript {
     repositories {

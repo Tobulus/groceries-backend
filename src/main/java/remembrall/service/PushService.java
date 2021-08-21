@@ -56,7 +56,8 @@ public class PushService {
             GroceryList groceryList = groceryListRepository.findById(groceryListId).orElseThrow(
                     () -> new InvalidParameterException("Cannot find list with id: " + groceryListId));
             Message message = Message.builder().setToken(receiver.getToken())
-                                     .setAndroidConfig(AndroidConfig.builder().setNotification(
+                                     .setAndroidConfig(AndroidConfig.builder().putData("listId", String.valueOf(groceryListId))
+                                                                    .setNotification(
                                              AndroidNotification.builder().setClickAction("OPEN_LIST")
                                                                 .setTitle(i18n.getMessage("PushService.entryPush.title",
                                                                                           receiver.getLocale()))
