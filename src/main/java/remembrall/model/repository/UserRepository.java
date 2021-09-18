@@ -14,6 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByGroceryLists(GroceryList list);
 
+    List<User> findByIdAndFriends_username(User user, String username);
+
     @Modifying
     @Query("UPDATE User SET password = ?2, enabled = ?3 WHERE username = ?1")
     int updatePasswordAndEnabledFor(String username, String password, boolean enabled);

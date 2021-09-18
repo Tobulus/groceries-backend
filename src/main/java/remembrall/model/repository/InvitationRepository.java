@@ -12,7 +12,7 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
     List<Invitation> findByReceiver(User receiver);
 
     @EntityGraph(value = "Invitation.groceryListAndUsers")
-    Optional<Invitation> findByIdAndReceiver(Long id, User user);
+    Optional<Invitation> findEagerSenderReceiverByIdAndReceiver(Long id, User user);
 
     Long deleteByIdAndReceiver(Long id, User receiver);
 }

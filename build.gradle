@@ -50,7 +50,7 @@ dependencies {
     implementation 'org.thymeleaf:thymeleaf-spring5'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     implementation 'com.google.firebase:firebase-admin:6.8.1'
-    testCompile    'org.springframework.boot:spring-boot-starter-test'
+    testImplementation    'org.springframework.boot:spring-boot-starter-test'
 }
 
 task unpack(type: Copy) {

@@ -87,6 +87,18 @@ public class UserService {
         mail.send(message);
     }
 
+    public void createFriendship(User one, User two) {
+        if (!one.getFriends().contains(two)) {
+            one.getFriends().add(two);
+            userRepository.save(one);
+        }
+
+        if (!two.getFriends().contains(one)) {
+            two.getFriends().add(one);
+            userRepository.save(two);
+        }
+    }
+
     private String generatePassword(int length) {
         StringBuilder sb = new StringBuilder();
         SecureRandom rnd = new SecureRandom();

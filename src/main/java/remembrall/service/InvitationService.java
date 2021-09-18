@@ -22,12 +22,15 @@ public class InvitationService {
     private UserRepository userRepository;
 
     @Autowired
+    private UserService users;
+
+    @Autowired
     private GroceryListRepository groceryListRepository;
 
     @Transactional
     public void ackknowledge(User currentUser, Long id) {
         Invitation invitation =
-                invitationRepository.findByIdAndReceiver(id, currentUser)
+                invitationRepository.findEagerSenderReceiverByIdAndReceiver(id, currentUser)
                                     .orElseThrow(
                                             () -> new InvalidParameterException("Invitation doesn't exist."));
 
@@ -36,7 +39,7 @@ public class InvitationService {
                 () -> new InvalidParameterException("Can't find grocerylist with id " + listId));
         list.getUsers().add(currentUser);
         groceryListRepository.save(list);
-
+        users.createFriendship(invitation.getSender(), invitation.getReceiver());
         invitationRepository.delete(invitation);
     }
 

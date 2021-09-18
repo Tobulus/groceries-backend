@@ -2,13 +2,8 @@ package remembrall.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import javax.persistence.*;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -37,6 +32,17 @@ public class User extends IdEntity {
     @JsonIgnore
     @ManyToMany(mappedBy = "users")
     private Set<GroceryList> groceryLists = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany
+    @JoinTable(name = "friends", joinColumns = {
+            @JoinColumn(name = "user", referencedColumnName = "id"),
+            @JoinColumn(name = "friend", referencedColumnName = "id")})
+    private Set<User> friends = new HashSet<>();
+
+    public Set<User> getFriends() {
+        return friends;
+    }
 
     public String getUsername() {
         return username;
